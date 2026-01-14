@@ -1,0 +1,25 @@
+{
+  "resourceType": "ValueSet",
+  "id": "BloodTypeElement",
+  "name": "Elementy grupy krwi",
+  "status": "active",
+  "version": 1,
+  "publisher": "SignalBot",
+  "url": "/ValueSet/BloodTypeElement",
+  "compose": {
+    "include": [
+      {
+        "concept": [
+          {
+            "code": "TYPE",
+            "display": "Grupa krwi"
+          },
+          {
+            "code": "RHESUS_FACTOR",
+            "display": "Czynnik Rh"
+          }
+        ]
+      }
+    ]
+  }
+}

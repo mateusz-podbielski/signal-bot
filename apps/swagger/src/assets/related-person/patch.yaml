@@ -1,0 +1,74 @@
+patch:
+  security:
+    - xAuthToken: []
+  tags:
+    - related-person
+  summary: Patches related person properties
+  parameters:
+    - in: path
+      required: true
+      name: propertyName
+      description: The property name which should be changed
+      schema:
+        type: string
+        enum:
+          - gender
+          - firstName
+          - lastName
+          - addressLine
+          - postalCode
+          - city
+          - email
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            value:
+              type: string
+  responses:
+    200:
+      description: Updated patient object
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              reourceType:
+                description: Resource type
+                type: string
+                enum:
+                  - RelatedPerson
+              id:
+                description: Patient Fhir resource Id
+                type: string
+              meta:
+                description: Resourse metadata
+                type: object
+              identifier:
+                description: the array of identifiers
+                type: array
+                items:
+                  type: object
+              active:
+                type: boolean
+              name:
+                type: array
+                items:
+                  $ref: '../schemas/human-name.yaml'
+              telcom:
+                type: array
+                items:
+                  $ref: '../schemas/telcom.yaml'
+              gender:
+                type: string
+                enum:
+                  - male
+                  - female
+                  - other
+                  - unknown
+              address:
+                type: array
+                items:
+                  $ref: '../schemas/address.yaml'

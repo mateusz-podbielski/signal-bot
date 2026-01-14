@@ -1,0 +1,61 @@
+get:
+  tags:
+    - service-request
+  security:
+    - xAuthToken: [ ]
+  parameters:
+    - in: query
+      name: from
+      required: false
+      schema:
+        type: string
+    - in: query
+      name: to
+      required: false
+      schema:
+        type: string
+    - in: query
+      name: date
+      required: false
+      schema:
+        type: string
+  responses:
+    200:
+      description: The list of user service requests
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../schemas/service-request.yaml'
+    400:
+      description: Incorrect query param
+    401:
+      description: User is not authorized
+    403:
+      description: This resource is available only for resourceType RelatedPerson
+    500:
+      description: Unexpected error
+post:
+  security:
+    - xAuthToken: [ ]
+  tags:
+    - service-request
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: '../schemas/service-request-payload.yaml'
+  responses:
+    200:
+      description: Newly created service request object
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/service-request.yaml'
+    400:
+      description: Incorrect post payload
+    401:
+      description: User is not authorized
+    403:
+      description: This resource is available only for resourceType RelatedPerson

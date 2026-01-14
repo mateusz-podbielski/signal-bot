@@ -1,0 +1,82 @@
+get:
+  summary: Returs single charge item
+  tags:
+    - charge-item
+  security:
+    - xAuthToken: [ ]
+  parameters:
+    - in: path
+      name: chargeItemId
+      schema:
+        type: string
+      required: true
+  responses:
+    200:
+      description: Single ChargeItem
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              chargeItem:
+                $ref: '../schemas/charge-item.yaml'
+              bill:
+                $ref: '../schemas/attachment.yaml'
+    404:
+      description: Charge item with given id not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+              code:
+                type: string
+                enum:
+                  - RESOURCE_NOT_FOUND
+put:
+  summary: Updates the charge item (only metadata, without files)
+  tags:
+    - charge-item
+  security:
+    - xAuthToken: [ ]
+  parameters:
+    - in: path
+      name: chargeItemId
+      schema:
+        type: string
+      required: true
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: '../schemas/charge-item-payload-json.yaml'
+  responses:
+    200:
+      description: Newly created charge item
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/charge-item.yaml'
+delete:
+  summary: deletes the charge item and attached documents
+  tags:
+    - charge-item
+  security:
+    - xAuthToken: [ ]
+  parameters:
+    - in: path
+      name: chargeItemId
+      schema:
+        type: string
+      required: true
+  responses:
+    204:
+      description: Charge item has been deleted
+    404:
+      description: Charge item with given id not found
+    405:
+      description: Can not delete the charge item - contains the documents not authered by user
+    500:
+      description: Unexpected error

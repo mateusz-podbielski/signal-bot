@@ -1,0 +1,36 @@
+get:
+  summary: Returs charge item bill file or files
+  tags:
+    - charge-item
+  security:
+    - xAuthToken: [ ]
+  parameters:
+    - in: path
+      name: chargeItemId
+      schema:
+        type: string
+      required: true
+    - in: query
+      name: url
+      description: Url of single file
+      schema:
+        type: string
+      required: true
+  responses:
+    200:
+      description: ChargeItem bill
+delete:
+  summary: Removes charge item bill
+  tags:
+    - charge-item
+  security:
+    - xAuthToken: [ ]
+  parameters:
+    $ref: 'parameters.yaml'
+  responses:
+    204:
+      description: ChargeItem bill has been removed
+    405:
+      description: Bill can be deleted only by its author
+    500:
+      description: Unexpected error

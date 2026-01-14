@@ -1,0 +1,46 @@
+{
+  "resourceType": "ValueSet",
+  "id": "AppointmentParticipantRole",
+  "system": "/ValueSet/AppointmentParticipantRole",
+  "version": 2,
+  "name": "Rola uczestnika wizyty lekarskiej",
+  "status": "active",
+  "publisher": "SignalBot",
+  "url": "/ValueSet/AppointmentParticipantRole",
+  "compose": {
+    "include": [
+      {
+        "concept": [
+          {
+            "code": "DOCTOR",
+            "display": "Lekarz"
+          },
+          {
+            "code": "NURSE",
+            "display": "Pielęgniarka"
+          },
+          {
+            "code": "RELATED",
+            "display": "Opiekuna/Opiekun"
+          },
+          {
+            "code": "PATIENT",
+            "display": "Pacjent"
+          },
+          {
+            "code": "CONSULT",
+            "display": "Konsultant"
+          },
+          {
+            "code": "THERAP",
+            "display": "Terapeuta"
+          },
+          {
+            "code": "OTHER",
+            "display": "Inny"
+          }
+        ]
+      }
+    ]
+  }
+}

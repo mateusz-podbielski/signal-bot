@@ -1,0 +1,21 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Fhir resource id
+  title:
+    type: string
+  description:
+    type: string
+  date:
+    type: string
+  files:
+    type: array
+    items:
+      $ref: 'document-reference.yaml'
+    description: Files attached to the resource
+  type:
+    $ref: 'composition-document-type.yaml'
+  patient:
+    type: string
+    description: The patient's MongoDB id

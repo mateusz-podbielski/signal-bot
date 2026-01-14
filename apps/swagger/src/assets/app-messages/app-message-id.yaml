@@ -1,0 +1,15 @@
+delete:
+  tags:
+    - app-messages
+  security:
+    - xAuthToken: [ ]
+  parameters:
+    - in: path
+      required: true
+      name: messageId
+      description: The Mongo Id of message which will be deleted
+      schema:
+        type: string
+  responses:
+    204:
+      description: The message of given id has been deleted

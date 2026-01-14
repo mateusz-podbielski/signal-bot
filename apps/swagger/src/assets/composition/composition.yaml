@@ -1,0 +1,33 @@
+post:
+  tags:
+    - composition
+  security:
+    - xAuthToken: [ ]
+  summary: Creates new document composition
+  requestBody:
+    content:
+      multipart/form-data:
+        schema:
+          type: object
+          properties:
+            documentType:
+              $ref: '../schemas/composition-document-type.yaml'
+            description:
+              type: string
+            patient:
+              type: string
+            title:
+              type: string
+            documents:
+              type: array
+              description: The field, where files should be attached
+              items:
+                type: string
+                format: binary
+  responses:
+    200:
+      description: Newly created composition response
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/composition-response.yaml'

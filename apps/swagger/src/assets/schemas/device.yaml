@@ -1,0 +1,29 @@
+type: object
+properties:
+  resourceType:
+    type: string
+    enum:
+      - Device
+  meta:
+    $ref: 'resource-meta.yaml'
+  id:
+    type: string
+  udiCarrier:
+    type: object
+    properties:
+      deviceIdentifier:
+        type: string
+  status:
+    $ref: 'device-status.yaml'
+  deviceName:
+    type: array
+    items:
+      $ref: 'device-name.yaml'
+  patient:
+    $ref: 'reference.yaml'
+  parent:
+    $ref: 'reference.yaml'
+  note:
+    type: array
+    items:
+      $ref: 'annotation.yaml'

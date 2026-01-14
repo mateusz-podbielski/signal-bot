@@ -1,0 +1,85 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": [
+      "es2017",
+      "dom"
+    ],
+    "types": [
+      "node"
+    ],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+    "paths": {
+      "@conf": [
+        "conf.ts"
+      ],
+      "@signalbot-backend/interfaces": [
+        "interfaces/index.ts"
+      ],
+      "@signalbot-backend/authenticate": [
+        "libs/authenticate/src/index.ts"
+      ],
+      "@signalbot-backend/custom-error": [
+        "libs/custom-error/src/index.ts"
+      ],
+      "@signalbot-backend/jwt-helper": [
+        "libs/jwt-helper/src/index.ts"
+      ],
+      "@signalbot-backend/schemas": [
+        "libs/schemas/src/index.ts"
+      ],
+      "@signalbot-backend/logger": [
+        "libs/logger/src/index.ts"
+      ],
+      "@signalbot-backend/mailer": [
+        "libs/mailer/src/index.ts"
+      ],
+      "@signalbot-backend/validators": [
+        "libs/validators/src/index.ts"
+      ],
+      "@signalbot-backend/sms-helper": [
+        "libs/sms-helper/src/index.ts"
+      ],
+      "@signalbot-backend/controllers": [
+        "libs/controllers/src/index.ts"
+      ],
+      "@signalbot-backend/fhir-connector": [
+        "libs/fhir-connector/src/index.ts"
+      ],
+      "@signalbot-backend/mongo-connect": [
+        "libs/mongo-connect/src/index.ts"
+      ],
+      "@signalbot-backend/roles-map": [
+        "libs/roles-map/src/index.ts"
+      ],
+      "@signalbot-backend/user-resource": [
+        "libs/user-resource/src/index.ts"
+      ],
+      "@signalbot-backend/tests": [
+        "tests/index.ts"
+      ],
+      "@signalbot-backend/make-pdf": [
+        "libs/make-pdf/src/index.ts"
+      ],
+      "@signalbot-backend/i18next": [
+        "libs/i18next/src/index.ts"
+      ]
+    }
+  },
+  "exclude": [
+    "node_modules",
+    "tmp"
+  ]
+}

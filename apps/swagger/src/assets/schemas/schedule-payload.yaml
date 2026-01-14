@@ -1,0 +1,16 @@
+type: object
+properties:
+  planningHorizon:
+    $ref: 'period.yaml'
+    description: Period of time covered by schedule
+  comment:
+    type: string
+    description: Comment
+  name:
+    type: string
+    description: Schedule item name
+required:
+  - name
+  - comment
+  - planningHorizon
+description: The schedule payload to create the resource

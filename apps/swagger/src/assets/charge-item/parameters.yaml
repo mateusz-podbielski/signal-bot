@@ -1,0 +1,10 @@
+- in: path
+  name: chargeItemId
+  schema:
+    type: string
+  required: true
+- in: query
+  name: url
+  schema:
+    type: string
+  required: true

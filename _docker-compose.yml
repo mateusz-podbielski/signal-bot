@@ -1,0 +1,115 @@
+version: '3.7'
+services:
+  ssb-backend-all:
+    image: ssb-backend:latest
+    container_name: ssb-backend-all
+    restart: on-failure
+    environment:
+      BACKEND_MONGO_HOST: '${BACKEND_MONGO_HOST}'
+      BACKEND_MONGO_PORT: '${BACKEND_MONGO_PORT}'
+      BACKEND_MONGO_PASS: '${BACKEND_MONGO_PASS}'
+      BACKEND_MONGO_USER: '${BACKEND_MONGO_USER}'
+      BACKEND_SECRET: '${BACKEND_SECRET}'
+      BACKEND_SENDGRID_API_KEY: '${BACKEND_SENDGRID_API_KEY}'
+      BACKEND_SMS_API_TOKEN: '${BACKEND_SMS_API_TOKEN}'
+      BACKEND_FHIR_URL: '${BACKEND_FHIR_URL}'
+      BACKEND_FHIR_PORT: '${BACKEND_FHIR_PORT}'
+      FHIR_DB_NAME: '${FHIR_DB_NAME}'
+      FHIR_DB_USER: '${FHIR_DB_USER}'
+      FHIR_DB_PASS: '${FHIR_DB_PASS}'
+      BACKEND_URL: '${BACKEND_URL}'
+      BACKEND_API_PORT: '${BACKEND_API_PORT}'
+      FRONTEND_URL: '${FRONTEND_URL}'
+      BACKEND_BITLY_TOKEN: '${BACKEND_BITLY_TOKEN}'
+      BACKEND_BITLY_GROUP: '${BACKEND_BITLY_GROUP}'
+      BACKEND_TWILIO_ACCOUNT_SID: '${BACKEND_TWILIO_ACCOUNT_SID}'
+      BACKEND_TWILIO_API_KEY_SID: '${BACKEND_TWILIO_API_KEY_SID}'
+      BACKEND_TWILIO_SECRET: '${BACKEND_TWILIO_SECRET}'
+      BACKEND_TWILIO_CHAT_SERVICE_SID: '${BACKEND_TWILIO_CHAT_SERVICE_SID}'
+      BACKEND_UPLOAD_PATH: '${BACKEND_UPLOAD_PATH}'
+      BACKEND_TCP_AUTH_APP_NODE_PORT: '${BACKEND_TCP_AUTH_APP_NODE_PORT}'
+      BACKEND_TCP_API_NODE_PORT: '${BACKEND_TCP_API_NODE_PORT}'
+      BACKEND_TCP_SOCKET_IO_NODE_PORT: '${BACKEND_TCP_SOCKET_IO_NODE_PORT}'
+      BACKEND_TCP_IP: '${BACKEND_TCP_IP}'
+    volumes:
+      - ssb-backend-upload:${BACKEND_UPLOAD_PATH}
+    ports:
+      - "${BACKEND_API_PORT}:${BACKEND_API_PORT}"
+      - "${BACKEND_TCP_API_NODE_PORT}:${BACKEND_TCP_API_NODE_PORT}"
+
+  ssb-backend-auth:
+    image: ssb-backend-auth:latest
+    container_name: ssb-backend-auth
+    restart: on-failure
+    environment:
+      BACKEND_MONGO_HOST: '${BACKEND_MONGO_HOST}'
+      BACKEND_MONGO_PORT: '${BACKEND_MONGO_PORT}'
+      BACKEND_MONGO_PASS: '${BACKEND_MONGO_PASS}'
+      BACKEND_MONGO_USER: '${BACKEND_MONGO_USER}'
+      BACKEND_SECRET: '${BACKEND_SECRET}'
+      BACKEND_AUTH_PORT: '${BACKEND_AUTH_PORT}'
+      BACKEND_TCP_AUTH_APP_NODE_PORT: '${BACKEND_TCP_AUTH_APP_NODE_PORT}'
+      BACKEND_TCP_API_NODE_PORT: '${BACKEND_TCP_API_NODE_PORT}'
+      BACKEND_TCP_SOCKET_IO_NODE_PORT: '${BACKEND_TCP_SOCKET_IO_NODE_PORT}'
+      BACKEND_TCP_IP: '${BACKEND_TCP_IP}'
+    ports:
+      - "${BACKEND_AUTH_PORT}:${BACKEND_AUTH_PORT}"
+      - "${BACKEND_TCP_AUTH_APP_NODE_PORT}:${BACKEND_TCP_AUTH_APP_NODE_PORT}"
+
+  ssb-backend-bthub:
+    image: ssb-backend-bthub:latest
+    container_name: ssb-backend-bthub
+    restart: on-failure
+    environment:
+      BACKEND_BTHUB_PORT: '${BACKEND_BTHUB_PORT}'
+      BACKEND_FHIR_URL: '${BACKEND_FHIR_URL}'
+      BACKEND_FHIR_PORT: '${BACKEND_FHIR_PORT}'
+      FHIR_DB_NAME: '${FHIR_DB_NAME}'
+      FHIR_DB_USER: '${FHIR_DB_USER}'
+      FHIR_DB_PASS: '${FHIR_DB_PASS}'
+      BACKEND_MONGO_HOST: '${BACKEND_MONGO_HOST}'
+      BACKEND_MONGO_PORT: '${BACKEND_MONGO_PORT}'
+      BACKEND_MONGO_PASS: '${BACKEND_MONGO_PASS}'
+      BACKEND_MONGO_USER: '${BACKEND_MONGO_USER}'
+      BACKEND_SECRET: '${BACKEND_SECRET}'
+      BACKEND_TCP_AUTH_APP_NODE_PORT: '${BACKEND_TCP_AUTH_APP_NODE_PORT}'
+      BACKEND_TCP_API_NODE_PORT: '${BACKEND_TCP_API_NODE_PORT}'
+      BACKEND_TCP_SOCKET_IO_NODE_PORT: '${BACKEND_TCP_SOCKET_IO_NODE_PORT}'
+      BACKEND_TCP_IP: '${BACKEND_TCP_IP}'
+    ports:
+      - "${BACKEND_BTHUB_PORT}:${BACKEND_BTHUB_PORT}"
+
+  ssb-backend-socket-io:
+    depends_on:
+      - ssb-backend-api
+    image: ssb-backend-socket-io:latest
+    container_name: ssb-backend-socket-io
+    restart: on-failure
+    environment:
+      BACKEND_SOCKET_PORT: '${BACKEND_SOCKET_PORT}'
+      BACKEND_MONGO_HOST: '${BACKEND_MONGO_HOST}'
+      BACKEND_MONGO_PORT: '${BACKEND_MONGO_PORT}'
+      BACKEND_MONGO_PASS: '${BACKEND_MONGO_PASS}'
+      BACKEND_MONGO_USER: '${BACKEND_MONGO_USER}'
+      BACKEND_SENDGRID_API_KEY: '${BACKEND_SENDGRID_API_KEY}'
+      BACKEND_SECRET: '${BACKEND_SECRET}'
+      BACKEND_TCP_AUTH_APP_NODE_PORT: '${BACKEND_TCP_AUTH_APP_NODE_PORT}'
+      BACKEND_TCP_API_NODE_PORT: '${BACKEND_TCP_API_NODE_PORT}'
+      BACKEND_TCP_SOCKET_IO_NODE_PORT: '${BACKEND_TCP_SOCKET_IO_NODE_PORT}'
+      BACKEND_TCP_IP: '${BACKEND_TCP_IP}'
+    ports:
+      - "${BACKEND_SOCKET_PORT}:5555"
+      - "${BACKEND_TCP_SOCKET_IO_NODE_PORT}:${BACKEND_TCP_SOCKET_IO_NODE_PORT}"
+
+  ssb-backend-swagger:
+    depends_on:
+      - ssb-backend-api
+    image: ssb-backend-swagger:latest
+    container_name: ssb-backend-swagger
+    restart: on-failure
+    environment:
+      BACKEND_SWAGGER_PORT: '${BACKEND_SWAGGER_PORT}'
+    ports:
+      - "${BACKEND_SWAGGER_PORT}:8001"
+volumes:
+  ssb-backend-upload:

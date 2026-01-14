@@ -1,0 +1,9 @@
+type: string
+enum:
+  - planned
+  - billable
+  - notBillable
+  - aborted
+  - billed
+  - enteredInError
+  - unknown

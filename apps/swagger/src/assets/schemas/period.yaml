@@ -1,0 +1,11 @@
+type: object
+properties:
+  start:
+    type: string
+    description: DateTime in format YYYY, YYYY-MM, YYYY-MM-DD or YYYY-MM-DDThh:mm:ss+zz:zz
+  end:
+    type: string
+    description: DateTime in format YYYY, YYYY-MM, YYYY-MM-DD or YYYY-MM-DDThh:mm:ss+zz:zz
+required:
+  - start
+  - end

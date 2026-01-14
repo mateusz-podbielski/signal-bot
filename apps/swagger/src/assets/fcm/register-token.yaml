@@ -1,0 +1,29 @@
+post:
+  tags:
+    - fcm
+  security:
+    - xAuthToken: [ ]
+  summary: Saves FCM User token
+  requestBody:
+    description: FCM token to save
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            token:
+              type: string
+          required:
+            - token
+  responses:
+    200:
+      description: Token id, when saved
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              tokenId:
+                type: string
+            required:
+              - tokenId

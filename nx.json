@@ -1,0 +1,53 @@
+{
+  "npmScope": "signalbot-backend",
+  "affected": {
+    "defaultBase": "master"
+  },
+  "implicitDependencies": {
+    "workspace.json": "*",
+    "package.json": {
+      "dependencies": "*",
+      "devDependencies": "*"
+    },
+    "tsconfig.base.json": "*",
+    "tslint.json": "*",
+    ".eslintrc.json": "*",
+    "nx.json": "*"
+  },
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "@nrwl/workspace/tasks-runners/default",
+      "options": {
+        "cacheableOperations": [
+          "build",
+          "lint",
+          "test",
+          "e2e"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "api": { "tags": [] },
+    "authenticate": { "tags": [] },
+    "custom-error": { "tags": [] },
+    "jwt-helper": { "tags": [] },
+    "schemas": { "tags": [] },
+    "logger": { "tags": [] },
+    "mailer": { "tags": [] },
+    "validators": { "tags": [] },
+    "sms-helper": { "tags": [] },
+    "swagger": { "tags": [] },
+    "fhir-extension": { "tags": [] },
+    "socket-io": { "tags": [] },
+    "controllers": { "tags": [] },
+    "fhir-connector": { "tags": [] },
+    "mongo-connect": { "tags": [] },
+    "roles-map": { "tags": [] },
+    "user-resource": { "tags": [] },
+    "auth": { "tags": [] },
+    "bthub": { "tags": [] },
+    "make-pdf": { "tags": [] },
+    "i18next": { "tags": [] }
+  }
+}

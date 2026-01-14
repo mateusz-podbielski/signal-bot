@@ -1,0 +1,36 @@
+post:
+  tags:
+    - related-person
+  summary: Creates patient (child resource) and connect with releated person
+  security:
+    - xAuthToken: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            firstName:
+              description: User first name
+              type: string
+            lastName:
+              description: User family name
+              type: string
+            familyRelation:
+              $ref: '../schemas/family-relation.yaml'
+            identifier:
+              description: PESEL
+              type: string
+
+  responses:
+    200:
+      description: Response when child resource has been created successfuly
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              uid:
+                type: string
+                description: created user identifier

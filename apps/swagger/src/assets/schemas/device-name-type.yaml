@@ -1,0 +1,8 @@
+type: string
+enum:
+  - udiLabelName
+  - userFriendlyName
+  - patientReportedName
+  - manufacturerName
+  - modelName
+  - other

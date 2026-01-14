@@ -1,0 +1,34 @@
+post:
+  tags:
+    - twilio
+  security:
+    - xAuthToken: [ ]
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            requester:
+              type: string
+              description: Who send the invitation
+            invited:
+              type: string
+              description: Who should be invited
+          required:
+            - requester
+            - invited
+  responses:
+    200:
+      description: Channel id
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              channelId:
+                type: string
+    400:
+      description: Incorrect form data (missing requester or invited)
+    500:
+      description: Unexpected error

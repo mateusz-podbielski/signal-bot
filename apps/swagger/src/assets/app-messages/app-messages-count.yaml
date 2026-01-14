@@ -1,0 +1,15 @@
+get:
+  tags:
+    - app-messages
+  security:
+    - xAuthToken: [ ]
+  responses:
+    200:
+      description: The number of app mesages for user
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              count:
+                type: integer

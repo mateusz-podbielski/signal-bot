@@ -1,0 +1,18 @@
+put:
+  security:
+    - xAuthToken: [ ]
+  tags:
+    - observation
+  summary: Updates latest blood type observation resource
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: '../schemas/observation-blood-type-payload.yaml'
+  responses:
+    200:
+      description: Succesfully updated observation resource
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/observation.yaml'

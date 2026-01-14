@@ -1,0 +1,5 @@
+type: string
+enum:
+  - INTERNAL
+  - EXTERNAL
+description: How the app message should be handled - in app (INETRNAL) or on the backend (EXTERNAL)

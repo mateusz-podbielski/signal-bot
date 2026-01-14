@@ -1,0 +1,38 @@
+{
+  "resourceType": "ValueSet",
+  "id": "ChargeItemType",
+  "system": "/ValueSet/ChargeItemType",
+  "version": 2,
+  "name": "Typ Wydatku",
+  "status": "active",
+  "publisher": "SignalBot",
+  "url": "/ValueSet/ChargeItemType",
+  "compose": {
+    "include": [
+      {
+        "concept": [
+          {
+            "code": "MEDICINES",
+            "display": "Leki"
+          },
+          {
+            "code": "SHOPPING",
+            "display": "Zakupy"
+          },
+          {
+            "code": "DOCTOR_APP",
+            "display": "Wizyta lekarska"
+          },
+          {
+            "code": "OFFICIAL",
+            "display": "Urzędowe"
+          },
+          {
+            "code": "OTHER",
+            "display": "Inne"
+          }
+        ]
+      }
+    ]
+  }
+}

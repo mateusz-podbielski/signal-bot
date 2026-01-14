@@ -1,0 +1,34 @@
+{
+  "resourceType": "ValueSet",
+  "id": "BmiInterpretation",
+  "system": "/ValueSet/BmiInterpretation",
+  "name": "Interpretacja BMI",
+  "status": "active",
+  "publisher": "SignalBot",
+  "version": 1,
+  "url": "/ValueSet/BmiInterpretation",
+  "compose": {
+    "include": [
+      {
+        "concept": [
+          {
+            "code": "UNDERWEIGHT",
+            "display": "Niedowaga"
+          },
+          {
+            "code": "NORMAL",
+            "display": "Waga prawidłowa"
+          },
+          {
+            "code": "OVERWEIGHT",
+            "display": "Nadwaga"
+          },
+          {
+            "code": "OBESE",
+            "display": "Otyłość"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,40 @@
+get:
+  security:
+    - xAuthToken: [ ]
+  tags:
+    - observation
+  summary: Returns the pdf file with observations data
+  parameters:
+    - in: path
+      required: true
+      name: patientId
+      description: The mongo id of patient
+      schema:
+        type: string
+    - in: query
+      required: true
+      name: observationType
+      description: The observation type
+      schema:
+        $ref: '../schemas/observation-type.yaml'
+    - in: query
+      required: true
+      name: from
+      description: Limits the items from date
+      schema:
+        type: string
+        format: date-time
+    - in: query
+      required: true
+      name: to
+      description: Limits the items to date
+      schema:
+        type: string
+        format: date-time
+  responses:
+    200:
+      description: The observations report in pdf file
+    400:
+      description: Incorrect params
+    404:
+      description: Observations with provided params not found

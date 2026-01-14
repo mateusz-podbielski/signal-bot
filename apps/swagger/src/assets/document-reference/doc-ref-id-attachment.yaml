@@ -1,0 +1,35 @@
+put:
+  tags:
+    - document-reference
+  security:
+    - xAuthToken: [ ]
+  summary: Replaces the file in document reference
+  parameters:
+    - in: path
+      required: true
+      name: docRefId
+      description: DocumentReference resource id
+      schema:
+        type: string
+  requestBody:
+    content:
+      multipart/form-data:
+        schema:
+          type: object
+          properties:
+            attachment:
+              type: string
+              format: binary
+  responses:
+    200:
+      description: Updated version of document reference
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/document-reference.yaml'
+    404:
+      description: Document Reference or file not found
+    405:
+      description: Only author can replace the file
+    500:
+      description: Unexpected error

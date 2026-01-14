@@ -1,0 +1,15 @@
+get:
+  tags:
+    - check
+  parameters:
+    - in: path
+      name: value
+      description: PESEL value
+      required: true
+      schema:
+        type: string
+  responses:
+    204:
+      description: PESEL value correct
+    400:
+      description: Incorrect PESEL value

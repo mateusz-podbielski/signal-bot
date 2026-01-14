@@ -1,0 +1,38 @@
+{
+  "resourceType": "ValueSet",
+  "id": "VisitType",
+  "system": "/ValueSet/VisitType",
+  "name": "Typ Wizyty",
+  "status": "active",
+  "publisher": "SignalBot",
+  "version": 2,
+  "url": "/ValueSet/VisitType",
+  "compose": {
+    "include": [
+      {
+        "concept": [
+          {
+            "code": "HOME",
+            "display": "Wizyta u pacjenta w domu"
+          },
+          {
+            "code": "VIDEO",
+            "display": "Teleporada / konsultacje online"
+          },
+          {
+            "code": "HOSP",
+            "display": "Wizyta/pobyt w szpitalu"
+          },
+          {
+            "code": "CLINIC",
+            "display": "Wizyta w przychodni / gabinecie lekarskim"
+          },
+          {
+            "code": "OTHER",
+            "display": "Inny typ wizyty"
+          }
+        ]
+      }
+    ]
+  }
+}

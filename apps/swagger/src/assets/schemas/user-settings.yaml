@@ -1,0 +1,11 @@
+type: object
+description: User settings
+properties:
+  messages:
+    type: boolean
+  notifications:
+    type: boolean
+  measurements:
+    type: boolean
+  uid:
+    type: string

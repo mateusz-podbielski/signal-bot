@@ -1,0 +1,22 @@
+type: string
+enum:
+  - AcademicTitles
+  - CareTeamRoles
+  - QualificationCode
+  - IdentifierType
+  - AppointmentParticipantRole
+  - BloodPressure
+  - BloodTypeElement
+  - BmiInterpretation
+  - ChargeItemType
+  - DocumentType
+  - FeedingComponents
+  - ObservationCategory
+  - ObservationInterpretation
+  - ObservationMethod
+  - ObservationType
+  - ServiceRequestType
+  - VisitType
+  - MedicalSpecialization
+  - PractitionerRole
+  - FamilyRelations

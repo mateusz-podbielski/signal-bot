@@ -1,0 +1,287 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Bthub API",
+    "description": "Bthub API",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3001/bthub4"
+    }
+  ],
+  "paths": {
+    "/:imei/LiveSpO2Temp": {
+      "post": {
+        "description": "Save the saturation and temp measurments",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "imei",
+            "description": "The bthub imei",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "Oxi": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/OxiItem"
+                    }
+                  },
+                  "T": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/TempItem"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfuly saved response"
+          },
+          "400": {
+            "description": "Requested data has been not saved"
+          }
+        }
+      }
+    },
+    "/:imei/Pressure": {
+      "post": {
+        "description": "Save the pressure measurments",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "imei",
+            "description": "The bthub imei",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "P": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Pressure"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfuly saved response"
+          },
+          "400": {
+            "description": "Requested data has been not saved"
+          }
+        }
+      }
+    },
+    "/:imei/Weight": {
+      "post": {
+        "description": "Save the weight measurments",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "imei",
+            "description": "The bthub imei",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "W": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Weight"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfuly saved response"
+          },
+          "400": {
+            "description": "Requested data has been not saved"
+          }
+        }
+      }
+    },
+    "/:imei/Glucose": {
+      "post": {
+        "description": "Save the weight measurments",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "imei",
+            "description": "The bthub imei",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "G": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Glucose"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfuly saved response"
+          },
+          "400": {
+            "description": "Requested data has been not saved"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "TempItem": {
+        "type": "object",
+        "properties": {
+          "ET": {
+            "$ref": "#/components/schemas/ET"
+          },
+          "T": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 50,
+            "example": 36.6,
+            "description": "human body temperature in C deg"
+          }
+        }
+      },
+      "OxiItem": {
+        "type": "object",
+        "properties": {
+          "ET": {
+            "$ref": "#/components/schemas/ET"
+          },
+          "S": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100,
+            "description": "Saturation value in %",
+            "required": true,
+            "example": 99
+          },
+          "P": {
+            "type": "integer",
+            "minimum": 30,
+            "maximum": 250,
+            "description": "Heart rate value in bps",
+            "example": 77
+          }
+        }
+      },
+      "Pressure": {
+        "type": "object",
+        "properties": {
+          "ET": {
+            "$ref": "#/components/schemas/ET"
+          },
+          "S": {
+            "type": "integer",
+            "minimum": 30,
+            "maximum": 280,
+            "description": "Systolic blood pressure",
+            "example": 170
+          },
+          "D": {
+            "type": "integer",
+            "minimum": 30,
+            "maximum": 280,
+            "description": "Diastolic blood pressure",
+            "example": 90
+          },
+          "P": {
+            "type": "integer",
+            "minimum": 30,
+            "maximum": 250,
+            "description": "Heart rate value in bps",
+            "example": 77
+          }
+        }
+      },
+      "Weight": {
+        "type": "object",
+        "properties": {
+          "ET": {
+            "$ref": "#/components/schemas/ET"
+          },
+          "W": {
+            "type": "number",
+            "description": "Body weight",
+            "example": 88
+          }
+        }
+      },
+      "Glucose": {
+        "type": "object",
+        "properties": {
+          "ET": {
+            "$ref": "#/components/schemas/ET"
+          },
+          "G": {
+            "type": "number",
+            "description": "Blood glucose level",
+            "example": 100.6
+          }
+        }
+      },
+      "ET": {
+        "type": "number",
+        "description": "Unix timestamp in seconds",
+        "example": 1606314396
+      }
+    }
+  }
+}

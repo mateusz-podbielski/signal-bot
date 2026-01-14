@@ -1,0 +1,118 @@
+{
+  "resourceType": "ValueSet",
+  "id": "MedicalSpecialization",
+  "name": "Specjalizacje Medyczne",
+  "status": "active",
+  "publisher": "SignalBot",
+  "version": 2,
+  "url": "/ValueSet/MedicalSpecialization",
+  "compose": {
+    "include": [
+      {
+        "system": "urn:oid:2.16.840.1.113883.3.4424.13.11.21",
+        "concept": [
+          {
+            "code": "221214",
+            "display": "Choroby wewnętrzne"
+          },
+          {
+            "code": "221260",
+            "display": "Rehabilitacja medyczna"
+          },
+          {
+            "code": "0731",
+            "display": "Alergolog"
+          },
+          {
+            "code": "0707",
+            "display": "Dermatolog"
+          },
+          {
+            "code": "0740",
+            "display": "Diabetolog"
+          },
+          {
+            "code": "0797",
+            "display": "Dietetyk"
+          },
+          {
+            "code": "0743",
+            "display": "Gastrolog"
+          },
+          {
+            "code": "0744",
+            "display": "Geriatra"
+          },
+          {
+            "code": "0721",
+            "display": "Laryngolog"
+          },
+          {
+            "code": "0730",
+            "display": "Lekarz rodzinny"
+          },
+          {
+            "code": "0747",
+            "display": "Kardiochirurg"
+          },
+          {
+            "code": "0748",
+            "display": "Kardiolog dziecięcy"
+          },
+          {
+            "code": "0752",
+            "display": "Nefrolog"
+          },
+          {
+            "code": "0719",
+            "display": "Okulista"
+          },
+          {
+            "code": "0723",
+            "display": "Pediatra"
+          },
+          {
+            "code": "0801",
+            "display": "Terapeuta"
+          },
+          {
+            "code": "0724",
+            "display": "Ginekolog"
+          },
+          {
+            "code": "0725",
+            "display": "Psychiatra dziecięcy"
+          },
+          {
+            "code": "0727",
+            "display": "Psycholog dziecięcy"
+          },
+          {
+            "code": "0726",
+            "display": "Radiolog"
+          },
+          {
+            "code": "0728",
+            "display": "Fizjoterapeuta"
+          },
+          {
+            "code": "0757",
+            "display": "Reumatolog"
+          },
+          {
+            "code": "0729",
+            "display": "Urolog"
+          },
+          {
+            "code": "0782",
+            "display": "Ortodonta"
+          },
+          {
+            "code": "0786",
+            "display": "Stomatolog"
+          }
+        ]
+      }
+    ]
+  }
+}

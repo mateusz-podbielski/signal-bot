@@ -1,0 +1,39 @@
+post:
+  security:
+    - xAuthToken: [ ]
+  tags:
+    - appointment
+  summary: Creates the appointment
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: '../schemas/appointment-payload.yaml'
+  responses:
+    200:
+      description: Created appointment resource
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/appointment.yaml'
+    400:
+      description: Incorrect form data
+get:
+  security:
+    - xAuthToken: [ ]
+  tags:
+    - appointment
+  summary: Returns the appointments list where user is participant
+  parameters:
+    $ref: 'get-parameters.yaml'
+  responses:
+    200:
+      description: The list of appointments
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../schemas/appointment.yaml'
+    400:
+      description: Incorrect query params

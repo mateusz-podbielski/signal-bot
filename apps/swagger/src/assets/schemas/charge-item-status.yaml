@@ -1,0 +1,7 @@
+type: string
+enum:
+  - MEDICINES
+  - SHOPPING
+  - DOCTOR_APP
+  - OFFICIAL
+  - OTHER

@@ -1,0 +1,27 @@
+put:
+  tags:
+    - composition
+  security:
+    - xAuthToken: [ ]
+  summary: Update the composition metadata
+  parameters:
+    - in: path
+      required: true
+      name: compositionId
+      description: Composition resource id
+      schema:
+        type: string
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: '../schemas/document-payload.yaml'
+  responses:
+    200:
+      description: Updated composition response
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/composition-response.yaml'
+    500:
+      description: Unexpected error

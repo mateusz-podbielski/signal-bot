@@ -1,0 +1,77 @@
+post:
+  tags:
+    - user
+  security:
+    - xAuthToken: [ ]
+  summary: Creates full object of user settings
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          description: User settings
+          properties:
+            messages:
+              type: boolean
+            notifications:
+              type: boolean
+            measurments:
+              type: boolean
+          required:
+            - messages
+            - notifications
+            - measurments
+  responses:
+    200:
+      description: User settings
+      content:
+        application/json:
+          schema:
+            $ref: 'schemas/user-settings.yaml'
+get:
+  tags:
+    - user
+  security:
+    - xAuthToken: [ ]
+  summary: Returns user settings
+  responses:
+    200:
+      description: User settings
+      content:
+        application/json:
+          schema:
+            $ref: 'schemas/user-settings.yaml'
+    404:
+      description: Resource (user settings) for user not found
+patch:
+  tags:
+    - user
+  security:
+    - xAuthToken: [ ]
+  summary: Updates user settings
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          description: User settings
+          properties:
+            messages:
+              type: boolean
+            notifications:
+              type: boolean
+            measurments:
+              type: boolean
+          required:
+            - messages
+            - notifications
+            - measurments
+  responses:
+    200:
+      description: Updated user settings
+      content:
+        application/json:
+          schema:
+            $ref: 'schemas/user-settings.yaml'
+    404:
+      description: Resource to update (user settings) for user not found

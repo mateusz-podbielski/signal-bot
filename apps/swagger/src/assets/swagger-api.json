@@ -1,0 +1,6503 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "SignalBot API",
+    "description": "SignalBot private API for frontend App",
+    "version": "1.15.0",
+    "contact": {
+      "name": "Grzegorz Madajczak",
+      "email": "madajczak@gmail.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3001/api",
+      "description": "development server"
+    }
+  ],
+  "paths": {
+    "/dictionary/{resource}": {
+      "get": {
+        "tags": [
+          "dictionary"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "resource",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/DictionaryType"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response for dictionary request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DictionaryItem"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/sign-up": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Creates new user account",
+        "description": "Creates new user account, with Person resource on Fhir",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "resourceType",
+            "schema": {
+              "$ref": "#/components/schemas/CareTeamParticipantType"
+            },
+            "required": true,
+            "description": "Type of Fhir"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "description": "User email address",
+                    "type": "string"
+                  },
+                  "phoneNumber": {
+                    "description": "User phone number",
+                    "type": "string"
+                  },
+                  "password": {
+                    "description": "User password",
+                    "type": "string"
+                  },
+                  "firstName": {
+                    "description": "User first name",
+                    "type": "string"
+                  },
+                  "lastName": {
+                    "description": "User family name",
+                    "type": "string"
+                  },
+                  "qualificationCode": {
+                    "$ref": "#/components/schemas/QualificationCode"
+                  },
+                  "identifier": {
+                    "description": "Identifier of licence to practice when user is Practitioner",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "phoneNumber",
+                  "password",
+                  "email",
+                  "firstName",
+                  "lastName"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Newly created user JWT",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "token": {
+                      "type": "string",
+                      "description": "JWT as string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Incorrect or missing sign-up data"
+          }
+        }
+      }
+    },
+    "/auth/log-in": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Authenticate user by phoneNumber and password",
+        "requestBody": {
+          "description": "Authenticate data",
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "phoneNumber": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "phoneNumber",
+                  "password"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Authenticated user response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "token": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Incorrect or missing authentication data"
+          },
+          "403": {
+            "description": "Incorrect user credentials"
+          },
+          "404": {
+            "description": "Phone number not found in database"
+          },
+          "405": {
+            "description": "User is not confirmed"
+          },
+          "408": {
+            "description": "Max failed login attemps"
+          }
+        }
+      }
+    },
+    "/auth/{phoneNumber}/restore-password": {
+      "get": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Restore password",
+        "description": "Initialize the process of password restoring for given phone number",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "phoneNumber",
+            "required": true,
+            "description": "phone number with country code prefix (+48) where authentication code will be send",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response when process has been successfuly initializated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string"
+                    },
+                    "id": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Incorrect data has been provided"
+          },
+          "404": {
+            "description": "Given phone number has been not found in database"
+          },
+          "405": {
+            "description": "User not confirmed. Operation can not be performed"
+          }
+        }
+      }
+    },
+    "/auth/{phoneNumber}/change-password": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Change password for user",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "phoneNumber",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": 48500600700
+            }
+          },
+          {
+            "in": "query",
+            "name": "token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Data to change password for user",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "example": "12345678"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "code",
+                  "password"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success response"
+          },
+          "400": {
+            "description": "Incorrect post data"
+          },
+          "404": {
+            "description": "Incorrect sms auth code"
+          },
+          "405": {
+            "description": "Method not allowed due token"
+          },
+          "408": {
+            "description": "Provided sms token has been expired (age more then 180 sek)"
+          }
+        }
+      }
+    },
+    "/auth/{phoneNumber}/check": {
+      "get": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Check phone number in database",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "phoneNumber",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": 48500600700
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success response. Phone number not in database"
+          },
+          "400": {
+            "description": "Incorrect phone number. Already in database"
+          },
+          "500": {
+            "description": "Unsuspected error"
+          }
+        }
+      }
+    },
+    "/auth/{phoneNumber}/confirm": {
+      "patch": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Confirms phone number with given code",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "phoneNumber",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": 48500600700
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "code": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Success response. Phone number confirmed"
+          },
+          "400": {
+            "description": "Incorrect phone number. Already in database"
+          },
+          "404": {
+            "description": "Phone Number not found"
+          },
+          "408": {
+            "description": "Code outdated"
+          },
+          "500": {
+            "description": "Unsuspected error"
+          }
+        }
+      }
+    },
+    "/auth/{phoneNumber}/resend-code": {
+      "get": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Resends authentication code for user",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "phoneNumber",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": 48500600700
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Authentication code has been sent successfuly"
+          },
+          "400": {
+            "description": "Provided phone number not in database"
+          },
+          "405": {
+            "description": "Maximum number of codes sent this day reached"
+          }
+        }
+      }
+    },
+    "/auth/check-password": {
+      "get": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Check strength of password",
+        "description": "Checks password strength. Correct password should pass all mentioned conditions:\n* minimum lenght: 8 chcracters\n* maximum length: 256 characters\n* at least on small letter\n* at least on CAPITAL\n* at least one digit\n* at least one special character: \"!@#$%^&*()-_+=;?/.><|{}[]\n",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "password",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Password has been successfuly validated"
+          },
+          "400": {
+            "description": "Provided password has insufficient strength"
+          }
+        }
+      }
+    },
+    "/auth2": {
+      "get": {
+        "tags": [
+          "auth2"
+        ],
+        "description": "Authentication endpoint for server to server requests",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "grant_type",
+            "required": true,
+            "description": "The type of authentication",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "refresh_token",
+                "auth_token"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "description": "The authentication or refresh token",
+            "name": "token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "description": "The identifier of client requesting for token",
+            "name": "client_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The generated token with expiration time",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "refresh_token": {
+                      "type": "string",
+                      "description": "The refresh token"
+                    },
+                    "auth_token": {
+                      "type": "string",
+                      "description": "The authentication token"
+                    },
+                    "expires_in": {
+                      "type": "number",
+                      "description": "The Unix time in ms, when the token expire"
+                    }
+                  },
+                  "required": [
+                    "expires_in"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Incorrect or missing data"
+          },
+          "401": {
+            "description": "Unauthorized request due to invalid / outdated auth_token or refresh_token"
+          }
+        }
+      }
+    },
+    "/user": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "summary": "Get user data",
+        "responses": {
+          "200": {
+            "description": "User data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "resourceType": {
+                      "$ref": "#/components/schemas/CareTeamParticipantType"
+                    },
+                    "id": {
+                      "description": "Fhir user Id",
+                      "type": "number"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    },
+                    "active": {
+                      "type": "boolean"
+                    },
+                    "name": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/HumanName"
+                      }
+                    },
+                    "gender": {
+                      "$ref": "#/components/schemas/Gender"
+                    },
+                    "address": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Address"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/avatar": {
+      "patch": {
+        "tags": [
+          "user"
+        ],
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "summary": "Patches user resource with avatar data",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "avatar": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated User profile"
+          },
+          "500": {
+            "description": "Unexpected errors"
+          }
+        }
+      }
+    },
+    "/user/{uid}/avatar": {
+      "get": {
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "tags": [
+          "user"
+        ],
+        "summary": "Get user avatar",
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "name": "uid",
+            "description": "User Mongo ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User avatar image"
+          },
+          "404": {
+            "description": "User avatar not found"
+          },
+          "500": {
+            "description": "UNexpected errors"
+          }
+        }
+      }
+    },
+    "/user/password": {
+      "patch": {
+        "tags": [
+          "user"
+        ],
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "summary": "Changes the password",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "oldPassword": {
+                    "description": "Old password",
+                    "type": "string"
+                  },
+                  "password": {
+                    "description": "The new password",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "oldPassword",
+                  "password"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The password has been changed"
+          },
+          "403": {
+            "description": "Old password and saved password do not match"
+          },
+          "500": {
+            "description": "Unexpected errors"
+          }
+        }
+      }
+    },
+    "/user/last-login": {
+      "get": {
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "tags": [
+          "user"
+        ],
+        "summary": "Get user last login date",
+        "responses": {
+          "200": {
+            "description": "User last login date",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "lastLogin": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/confirm": {
+      "patch": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Check sms code sent durig registration proces",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "code": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success response"
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid"
+          },
+          "404": {
+            "description": "Incorrect SMS confirmation code"
+          },
+          "408": {
+            "description": "Confirmation SMS Code expired"
+          },
+          "500": {
+            "description": "Unexpected error"
+          }
+        }
+      }
+    },
+    "/user/resend-code": {
+      "get": {
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "tags": [
+          "user"
+        ],
+        "summary": "Resends authentication code for user",
+        "responses": {
+          "204": {
+            "description": "Authentication code has been sent successfuly"
+          },
+          "405": {
+            "description": "Maximum number of codes sent this day reached"
+          }
+        }
+      }
+    },
+    "/related-person/child": {
+      "post": {
+        "tags": [
+          "related-person"
+        ],
+        "summary": "Creates patient (child resource) and connect with releated person",
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "firstName": {
+                    "description": "User first name",
+                    "type": "string"
+                  },
+                  "lastName": {
+                    "description": "User family name",
+                    "type": "string"
+                  },
+                  "familyRelation": {
+                    "$ref": "#/components/schemas/FamilyRelation"
+                  },
+                  "identifier": {
+                    "description": "PESEL",
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Response when child resource has been created successfuly",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "uid": {
+                      "type": "string",
+                      "description": "created user identifier"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/related-person/family-relation": {
+      "patch": {
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "tags": [
+          "related-person"
+        ],
+        "summary": "Patches family relation",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "family-relation": {
+                    "$ref": "#/components/schemas/FamilyRelation"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated RelatedPerson object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RelatedPerson"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Incorrect family relation value"
+          }
+        }
+      }
+    },
+    "/related-person/{propertyName}": {
+      "patch": {
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "tags": [
+          "related-person"
+        ],
+        "summary": "Patches related person properties",
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "name": "propertyName",
+            "description": "The property name which should be changed",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "gender",
+                "firstName",
+                "lastName",
+                "addressLine",
+                "postalCode",
+                "city",
+                "email"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated patient object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "reourceType": {
+                      "description": "Resource type",
+                      "type": "string",
+                      "enum": [
+                        "RelatedPerson"
+                      ]
+                    },
+                    "id": {
+                      "description": "Patient Fhir resource Id",
+                      "type": "string"
+                    },
+                    "meta": {
+                      "description": "Resourse metadata",
+                      "type": "object"
+                    },
+                    "identifier": {
+                      "description": "the array of identifiers",
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    },
+                    "active": {
+                      "type": "boolean"
+                    },
+                    "name": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/HumanName"
+                      }
+                    },
+                    "telcom": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Telcom"
+                      }
+                    },
+                    "gender": {
+                      "type": "string",
+                      "enum": [
+                        "male",
+                        "female",
+                        "other",
+                        "unknown"
+                      ]
+                    },
+                    "address": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Address"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/invitations": {
+      "post": {
+        "summary": "Create invitation",
+        "description": "Sends request to invite new user to application. It could be other related person, practitioner or patient. Invitation will be send on given phone number.",
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "tags": [
+          "user"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "phoneNumber": {
+                    "description": "The phone number to send invitation",
+                    "type": "string"
+                  },
+                  "resourceType": {
+                    "$ref": "#/components/schemas/CareTeamParticipantType"
+                  },
+                  "careTeamId": {
+                    "type": "string",
+                    "description": "CareTeam id (of Fhir resource), where invited member will be appended"
+                  }
+                },
+                "required": [
+                  "phoneNumber",
+                  "resourceType",
+                  "careTeamId"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Invitation has been sent successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "_id": {
+                        "type": "string",
+                        "example": "60435d0ba0011d7a6cc5c765",
+                        "description": "MongoDB Invitation identifier"
+                      },
+                      "uid": {
+                        "type": "string",
+                        "example": "60435d0ba0011d7a6cc5c777",
+                        "description": "MongoDB Identifier of user, who's sending the invitation"
+                      },
+                      "phoneNumber": {
+                        "type": "string",
+                        "example": 48600700800,
+                        "description": "Phone number of user, who's receiving the invitation"
+                      },
+                      "resourceType": {
+                        "type": "string",
+                        "enum": [
+                          "Patient",
+                          "RelatedPerson",
+                          "Practitioner"
+                        ],
+                        "description": "ResourceType of user in careTeam"
+                      },
+                      "firstName": {
+                        "type": "string",
+                        "example": "Jan",
+                        "description": "firstname of user who's sending the invitation"
+                      },
+                      "lastName": {
+                        "type": "string",
+                        "example": "Kowalski",
+                        "description": "Lastname of user who's sending the invitation"
+                      },
+                      "patientId": {
+                        "type": "string",
+                        "example": 24,
+                        "description": "Fhir Patient identifier, to which member will be appended"
+                      },
+                      "createdAt": {
+                        "type": "string",
+                        "description": "The date and time in ISO format, when invitation has been sent"
+                      },
+                      "tokenId": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "User sends invitation to him self, what is not allowed"
+          },
+          "409": {
+            "description": "User sends invitation to existing user with resourceType conflict"
+          },
+          "418": {
+            "description": "User sends invitation for member from hist care-team"
+          }
+        }
+      },
+      "get": {
+        "summary": "User's invitations",
+        "description": "Returns user's created invitation together with received invitations",
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "tags": [
+          "user"
+        ],
+        "responses": {
+          "200": {
+            "description": "Invitations for user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "uid": {
+                        "type": "string"
+                      },
+                      "phoneNumber": {
+                        "type": "string"
+                      },
+                      "resourceType": {
+                        "$ref": "#/components/schemas/CareTeamParticipantType"
+                      },
+                      "firstName": {
+                        "type": "string"
+                      },
+                      "lastName": {
+                        "type": "string"
+                      },
+                      "createdAt": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/invitations/{invitationId}": {
+      "delete": {
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "tags": [
+          "user"
+        ],
+        "summary": "Deletes invitation with given invitationId",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "invitationId",
+            "description": "Invitation's id to be deleted",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Invitation has been deleted successfuly"
+          },
+          "405": {
+            "description": "Method not allowed (usually, when user would like to delete invitation sent by other user)"
+          }
+        }
+      }
+    },
+    "/user/invitations/{invitationId}/accept": {
+      "put": {
+        "summary": "Accept invitation",
+        "description": "Accepts invitation with given id",
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "tags": [
+          "user"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "invitationId",
+            "description": "Invitation's id to be accepted",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Invitation has been succesfuly accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CareTeam"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/invitations/{invitationId}/reject": {
+      "put": {
+        "summary": "Reject invitation",
+        "description": "Rejects invitation with given id",
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "tags": [
+          "user"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "invitationId",
+            "description": "Invitation's id to be rejected",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Invitation has been succesfuly rejected",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CareTeam"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/care-teams": {
+      "get": {
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "tags": [
+          "user"
+        ],
+        "summary": "Return care teams for user",
+        "responses": {
+          "200": {
+            "description": "the list of care teams where user is involved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "resourceType": {
+                        "type": "string",
+                        "description": "Resource type (ResourceType.CareTeam)"
+                      },
+                      "id": {
+                        "type": "string",
+                        "description": "id of care team"
+                      },
+                      "status": {
+                        "type": "string",
+                        "enum": [
+                          "proposed",
+                          "active",
+                          "suspended",
+                          "inactive",
+                          "entered-in-error"
+                        ]
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "participant": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/CareTeamParticipant"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/care-teams/member/{resourceType}": {
+      "get": {
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "tags": [
+          "user"
+        ],
+        "summary": "CareTeam members of given resourceTypes",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "resourceType",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/CareTeamParticipantType"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The array of CareTeam members of given resourceType",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "description": "resource type object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/settings": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "summary": "Creates full object of user settings",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "User settings",
+                "properties": {
+                  "messages": {
+                    "type": "boolean"
+                  },
+                  "notifications": {
+                    "type": "boolean"
+                  },
+                  "measurments": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "messages",
+                  "notifications",
+                  "measurments"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User settings",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserSettings"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "summary": "Returns user settings",
+        "responses": {
+          "200": {
+            "description": "User settings",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserSettings"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource (user settings) for user not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "user"
+        ],
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "summary": "Updates user settings",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "User settings",
+                "properties": {
+                  "messages": {
+                    "type": "boolean"
+                  },
+                  "notifications": {
+                    "type": "boolean"
+                  },
+                  "measurments": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "messages",
+                  "notifications",
+                  "measurments"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated user settings",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserSettings"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource to update (user settings) for user not found"
+          }
+        }
+      }
+    },
+    "/patient/{propertyName}": {
+      "patch": {
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "tags": [
+          "patient"
+        ],
+        "summary": "Patches user properties",
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "name": "propertyName",
+            "description": "The property name which should be changed",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "gender",
+                "firstName",
+                "lastName",
+                "addressLine",
+                "postalCode",
+                "city",
+                "pesel",
+                "email"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated patient object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "reourceType": {
+                      "description": "Resource type",
+                      "type": "string",
+                      "enum": [
+                        "Patient"
+                      ]
+                    },
+                    "id": {
+                      "description": "Patient Fhir resource Id",
+                      "type": "string"
+                    },
+                    "meta": {
+                      "description": "Resourse metadata",
+                      "type": "object"
+                    },
+                    "identifier": {
+                      "description": "the array of identifiers",
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    },
+                    "active": {
+                      "type": "boolean"
+                    },
+                    "name": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/HumanName"
+                      }
+                    },
+                    "telcom": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Telcom"
+                      }
+                    },
+                    "gender": {
+                      "$ref": "#/components/schemas/Gender"
+                    },
+                    "address": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Address"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/patient/{patientId}/last-login": {
+      "get": {
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "tags": [
+          "patient"
+        ],
+        "summary": "Get last login date of patient",
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "name": "patientId",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Last login date",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "lastLogin": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/patient/{patientId}/documents": {
+      "get": {
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "tags": [
+          "patient"
+        ],
+        "summary": "Returns documents connected with patient",
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "name": "patientId",
+            "description": "Mongo Id of patient",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Documents connected with patient",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompositionResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/practitioner/{propertyName}": {
+      "patch": {
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "tags": [
+          "practitioner"
+        ],
+        "summary": "Patches user properties",
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "name": "propertyName",
+            "description": "The property name which should be changed",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "gender",
+                "firstName",
+                "lastName",
+                "addressLine",
+                "postalCode",
+                "city",
+                "email",
+                "pwz",
+                "academicTitle",
+                "specialty"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated patient object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "reourceType": {
+                      "description": "Resource type",
+                      "type": "string",
+                      "enum": [
+                        "Practitioner"
+                      ]
+                    },
+                    "id": {
+                      "description": "Patient Fhir resource Id",
+                      "type": "string"
+                    },
+                    "meta": {
+                      "description": "Resourse metadata",
+                      "type": "object"
+                    },
+                    "identifier": {
+                      "description": "the array of identifiers",
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    },
+                    "active": {
+                      "type": "boolean"
+                    },
+                    "name": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/HumanName"
+                      }
+                    },
+                    "telcom": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Telcom"
+                      }
+                    },
+                    "gender": {
+                      "$ref": "#/components/schemas/Gender"
+                    },
+                    "address": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Address"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/practitioner/practitioner-role": {
+      "get": {
+        "tags": [
+          "practitioner"
+        ],
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "summary": "Get practitioner role for practitioner",
+        "responses": {
+          "200": {
+            "description": "User data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "resourceType": {
+                      "type": "string",
+                      "enum": [
+                        "PractititionerRole"
+                      ]
+                    },
+                    "id": {
+                      "type": "string"
+                    },
+                    "identifier": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    },
+                    "practitioner": {
+                      "type": "object",
+                      "properties": {
+                        "reference": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "Practitioner"
+                          ]
+                        }
+                      }
+                    },
+                    "code": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/PractitionerRoleCode"
+                      }
+                    },
+                    "specialty": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/SpecialityCode"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Provided id is not practitioner id"
+          },
+          "500": {
+            "description": "Unknow server error"
+          }
+        }
+      }
+    },
+    "/practitioner/care-teams/members": {
+      "get": {
+        "tags": [
+          "practitioner"
+        ],
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "summary": "Get care teams' members",
+        "description": "Get care teams members, where the practitioner is the participant",
+        "responses": {
+          "200": {
+            "description": "User data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/components/schemas/CareTeam"
+                      },
+                      {
+                        "$ref": "#/components/schemas/RelatedPerson"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Practitioner"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Patient"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/practitioner/{practitionerId}/practitioner-role": {
+      "get": {
+        "tags": [
+          "practitioner"
+        ],
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "summary": "Get practitioner role for practitioner",
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "name": "practitionerId",
+            "description": "Practitioner Mongo ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "resourceType": {
+                      "type": "string",
+                      "enum": [
+                        "PractititionerRole"
+                      ]
+                    },
+                    "id": {
+                      "type": "string"
+                    },
+                    "identifier": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    },
+                    "practitioner": {
+                      "type": "object",
+                      "properties": {
+                        "reference": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "Practitioner"
+                          ]
+                        }
+                      }
+                    },
+                    "code": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/PractitionerRoleCode"
+                      }
+                    },
+                    "specialty": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/SpecialityCode"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not enough privilages"
+          },
+          "405": {
+            "description": "Provided id is not practitioner id"
+          },
+          "500": {
+            "description": "Unknow server error"
+          }
+        }
+      }
+    },
+    "/care-team/patient/{patientId}": {
+      "get": {
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "tags": [
+          "care-team"
+        ],
+        "summary": "The CareTeam for given patient",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "patientId",
+            "description": "The Mongo ID of patient",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The CareTeam resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CareTeam"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "User and patient are not in the same CareTeam"
+          }
+        }
+      }
+    },
+    "/care-team/patient/{patientId}/members": {
+      "get": {
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "tags": [
+          "care-team"
+        ],
+        "summary": "the members of CareTeam for given patient",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "patientId",
+            "required": true,
+            "description": "The Mongo ID of patient",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The CareTeam resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/components/schemas/RelatedPerson"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Practitioner"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Patient"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "User and patient are not in the same CareTeam"
+          }
+        }
+      }
+    },
+    "/twilio/token/{grantType}": {
+      "get": {
+        "tags": [
+          "twilio"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "room",
+            "description": "The name of room to authenticate",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "grantType",
+            "required": true,
+            "description": "Type of token",
+            "schema": {
+              "$ref": "#/components/schemas/TwilioTokenType"
+            }
+          }
+        ],
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Token for authenicated user and room",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing room name, when type is video"
+          },
+          "401": {
+            "description": "User not authenticated (token missing or invalid)"
+          },
+          "403": {
+            "description": "Insufficient privilages"
+          }
+        }
+      }
+    },
+    "/twilio/chat/channel": {
+      "post": {
+        "tags": [
+          "twilio"
+        ],
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "requester": {
+                    "type": "string",
+                    "description": "Who send the invitation"
+                  },
+                  "invited": {
+                    "type": "string",
+                    "description": "Who should be invited"
+                  }
+                },
+                "required": [
+                  "requester",
+                  "invited"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Channel id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "channelId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Incorrect form data (missing requester or invited)"
+          },
+          "500": {
+            "description": "Unexpected error"
+          }
+        }
+      }
+    },
+    "/check/pesel/{value}": {
+      "get": {
+        "tags": [
+          "check"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "value",
+            "description": "PESEL value",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "PESEL value correct"
+          },
+          "400": {
+            "description": "Incorrect PESEL value"
+          }
+        }
+      }
+    },
+    "/service-request": {
+      "get": {
+        "tags": [
+          "service-request"
+        ],
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "from",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "to",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "date",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The list of user service requests",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ServiceRequest"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Incorrect query param"
+          },
+          "401": {
+            "description": "User is not authorized"
+          },
+          "403": {
+            "description": "This resource is available only for resourceType RelatedPerson"
+          },
+          "500": {
+            "description": "Unexpected error"
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "tags": [
+          "service-request"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ServiceRequestPayload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Newly created service request object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceRequest"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Incorrect post payload"
+          },
+          "401": {
+            "description": "User is not authorized"
+          },
+          "403": {
+            "description": "This resource is available only for resourceType RelatedPerson"
+          }
+        }
+      }
+    },
+    "/service-request/{requestId}": {
+      "get": {
+        "tags": [
+          "service-request"
+        ],
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "requestId",
+            "required": true,
+            "description": "Service request id, which will be updated",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The updated service requests",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceRequest"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User is not authorized"
+          },
+          "403": {
+            "description": "This resource is available only for resourceType RelatedPerson"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "service-request"
+        ],
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "requestId",
+            "required": true,
+            "description": "Service request id which will be updated",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ServiceRequestPayload"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated service request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceRequest"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User is not authorized"
+          },
+          "403": {
+            "description": "This resource is available only for resourceType RelatedPerson"
+          }
+        }
+      }
+    },
+    "/service-request/{requestId}/status": {
+      "patch": {
+        "tags": [
+          "service-request"
+        ],
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "requestId",
+            "required": true,
+            "description": "Service request id, which will be updated",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "draft",
+                      "active",
+                      "on-hold",
+                      "revoked",
+                      "completed",
+                      "entered-in-error",
+                      "unknown"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The updated service requests",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceRequest"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/charge-item": {
+      "post": {
+        "summary": "Crates new charge item",
+        "tags": [
+          "charge-item"
+        ],
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "amount": {
+                    "description": "Charge item amount",
+                    "type": "number"
+                  },
+                  "currency": {
+                    "description": "The amount currency (ISO)",
+                    "type": "string",
+                    "enum": [
+                      "PLN",
+                      "EUR",
+                      "CHF",
+                      "JPY",
+                      "USD"
+                    ]
+                  },
+                  "note": {
+                    "description": "The note for charge item",
+                    "type": "string"
+                  },
+                  "patient": {
+                    "description": "the Mongo ID of patient of charge item",
+                    "type": "string"
+                  },
+                  "type": {
+                    "description": "The charge item type",
+                    "type": "string",
+                    "enum": [
+                      "MEDICINES",
+                      "SHOPPING",
+                      "DOCTOR_APP",
+                      "OFFICIAL",
+                      "OTHER"
+                    ]
+                  },
+                  "bill": {
+                    "description": "The charge item bill",
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    }
+                  },
+                  "occurrence": {
+                    "description": "The date when charge item has been performed",
+                    "type": "string"
+                  },
+                  "performer": {
+                    "description": "The Mongo ID of user performing the charge item",
+                    "type": "string"
+                  },
+                  "name": {
+                    "description": "The name of charge item",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name",
+                  "performer",
+                  "occurence",
+                  "type",
+                  "patient",
+                  "note",
+                  "currency",
+                  "amount"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Newly created charge item",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "chargeItem": {
+                      "$ref": "#/components/schemas/ChargeItem"
+                    },
+                    "bills": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Attachment"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Returns the list of charge items created by user",
+        "tags": [
+          "charge-item"
+        ],
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The list of charge items",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "chargeItem": {
+                        "$ref": "#/components/schemas/ChargeItem"
+                      },
+                      "bills": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/Attachment"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/charge-item/{chargeItemId}": {
+      "get": {
+        "summary": "Returs single charge item",
+        "tags": [
+          "charge-item"
+        ],
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "chargeItemId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Single ChargeItem",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "chargeItem": {
+                      "$ref": "#/components/schemas/ChargeItem"
+                    },
+                    "bill": {
+                      "$ref": "#/components/schemas/Attachment"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Charge item with given id not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "RESOURCE_NOT_FOUND"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Updates the charge item (only metadata, without files)",
+        "tags": [
+          "charge-item"
+        ],
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "chargeItemId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "amount": {
+                    "description": "Charge item amount",
+                    "type": "number"
+                  },
+                  "currency": {
+                    "description": "The amount currency (ISO)",
+                    "type": "string",
+                    "enum": [
+                      "PLN",
+                      "EUR",
+                      "CHF",
+                      "JPY",
+                      "USD"
+                    ]
+                  },
+                  "note": {
+                    "description": "The note for charge item",
+                    "type": "string"
+                  },
+                  "patient": {
+                    "description": "the Mongo ID of patient of charge item",
+                    "type": "string"
+                  },
+                  "type": {
+                    "description": "The charge item type",
+                    "type": "string",
+                    "enum": [
+                      "MEDICINES",
+                      "SHOPPING",
+                      "DOCTOR_APP",
+                      "OFFICIAL",
+                      "OTHER"
+                    ]
+                  },
+                  "occurrence": {
+                    "description": "The date when charge item has been performed",
+                    "type": "string"
+                  },
+                  "performer": {
+                    "description": "The Mongo ID of user performing the charge item",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "performer",
+                  "occurrence",
+                  "type",
+                  "patient",
+                  "note",
+                  "currency",
+                  "amount"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Newly created charge item",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChargeItem"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "deletes the charge item and attached documents",
+        "tags": [
+          "charge-item"
+        ],
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "chargeItemId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Charge item has been deleted"
+          },
+          "404": {
+            "description": "Charge item with given id not found"
+          },
+          "405": {
+            "description": "Can not delete the charge item - contains the documents not authered by user"
+          },
+          "500": {
+            "description": "Unexpected error"
+          }
+        }
+      }
+    },
+    "/charge-item/{chargeItemId}/files": {
+      "patch": {
+        "summary": "Adds additional file to existing charge-item",
+        "tags": [
+          "charge-item"
+        ],
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "chargeItemId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "bill": {
+                    "description": "The charge item bill",
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    }
+                  }
+                },
+                "required": [
+                  "bill"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ChargeItem with added bills",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "chargeItem": {
+                      "$ref": "#/components/schemas/ChargeItem"
+                    },
+                    "bills": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Attachment"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error"
+          }
+        }
+      }
+    },
+    "/charge-item/{chargeItemId}/bill": {
+      "get": {
+        "summary": "Returs charge item bill file or files",
+        "tags": [
+          "charge-item"
+        ],
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "chargeItemId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "url",
+            "description": "Url of single file",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ChargeItem bill"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Removes charge item bill",
+        "tags": [
+          "charge-item"
+        ],
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "chargeItemId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "url",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "ChargeItem bill has been removed"
+          },
+          "405": {
+            "description": "Bill can be deleted only by its author"
+          },
+          "500": {
+            "description": "Unexpected error"
+          }
+        }
+      }
+    },
+    "/charge-item/{chargeItemId}/status": {
+      "patch": {
+        "summary": "Changes the charge item status",
+        "tags": [
+          "charge-item"
+        ],
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "chargeItemId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "$ref": "#/components/schemas/ChargeItemStatusType"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Newly created charge item",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChargeItem"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Incorrect or missing status value"
+          },
+          "500": {
+            "description": "Unexpected error"
+          }
+        }
+      }
+    },
+    "/composition": {
+      "post": {
+        "tags": [
+          "composition"
+        ],
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "summary": "Creates new document composition",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "documentType": {
+                    "$ref": "#/components/schemas/CompositionDocumentType"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "patient": {
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": "string"
+                  },
+                  "documents": {
+                    "type": "array",
+                    "description": "The field, where files should be attached",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Newly created composition response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompositionResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/composition/{compositionId}/meta": {
+      "put": {
+        "tags": [
+          "composition"
+        ],
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "summary": "Update the composition metadata",
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "name": "compositionId",
+            "description": "Composition resource id",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "documentType": {
+                    "$ref": "#/components/schemas/CompositionDocumentType"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Document description"
+                  },
+                  "patient": {
+                    "type": "string",
+                    "description": "The subject of this document"
+                  },
+                  "title": {
+                    "type": "string",
+                    "description": "The title of document"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated composition response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompositionResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error"
+          }
+        }
+      }
+    },
+    "/composition/{compositionId}/share": {
+      "post": {
+        "tags": [
+          "composition"
+        ],
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "summary": "Shares the all documents from composition resource",
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "name": "compositionId",
+            "description": "Composition resource id",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "description": "The email address where documents should be send"
+                  },
+                  "subject": {
+                    "type": "string",
+                    "description": "The email subject"
+                  },
+                  "message": {
+                    "type": "string",
+                    "description": "Additional message included in the email"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The documents has been sent"
+          },
+          "400": {
+            "description": "Incorrect post data"
+          },
+          "404": {
+            "description": "The composition has ben not found"
+          },
+          "405": {
+            "description": "You can share the documents only in case, if they are created by user who shares or other user from the same care team"
+          }
+        }
+      }
+    },
+    "/composition/document/{docRefId}": {
+      "get": {
+        "tags": [
+          "composition"
+        ],
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "summary": "Retrives the requested files",
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "name": "docRefId",
+            "description": "DocumentReference resource id",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Requested file binary data"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "composition"
+        ],
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "summary": "Deletes or archives all files from document reference",
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "name": "docRefId",
+            "description": "DocumentReference resource id",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Effect of deleting the document",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "effect": {
+                      "type": "string",
+                      "enum": [
+                        "deleted",
+                        "archived"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/document-reference/{docRefId}/attachment": {
+      "put": {
+        "tags": [
+          "document-reference"
+        ],
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "summary": "Replaces the file in document reference",
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "name": "docRefId",
+            "description": "DocumentReference resource id",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "attachment": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated version of document reference",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentReference"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Document Reference or file not found"
+          },
+          "405": {
+            "description": "Only author can replace the file"
+          },
+          "500": {
+            "description": "Unexpected error"
+          }
+        }
+      }
+    },
+    "/document-reference/{docRefId}/share": {
+      "post": {
+        "tags": [
+          "document-reference"
+        ],
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "summary": "Shares the documents from document reference",
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "name": "docRefId",
+            "description": "DocumentReference resource id",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Files has been send"
+          },
+          "404": {
+            "description": "Document Reference or file not found"
+          },
+          "500": {
+            "description": "Unexpected error"
+          }
+        }
+      }
+    },
+    "/fcm": {
+      "post": {
+        "tags": [
+          "fcm"
+        ],
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "summary": "Saves FCM User token",
+        "requestBody": {
+          "description": "FCM token to save",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "token": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "token"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Token id, when saved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "tokenId": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "tokenId"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/fcm/{tokenId}": {
+      "get": {
+        "tags": [
+          "fcm"
+        ],
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "summary": "Checks FCM token for user",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "tokenId",
+            "required": true,
+            "description": "Type of token",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "FCM Token when has been registered",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "description": "FCM token",
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Token has not been registered"
+          },
+          "500": {
+            "description": "Undefined error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "fcm"
+        ],
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "summary": "Removes FCM User token",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "tokenId",
+            "required": true,
+            "description": "Type of token",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "FCM Token has been deleted"
+          },
+          "404": {
+            "description": "Token has not been registered"
+          },
+          "500": {
+            "description": "Undefined error"
+          }
+        }
+      }
+    },
+    "/app-messages": {
+      "get": {
+        "tags": [
+          "app-messages"
+        ],
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The list of system messages",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AppMessage"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/app-messages/count": {
+      "get": {
+        "tags": [
+          "app-messages"
+        ],
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The number of app mesages for user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/app-messages/{messageId}": {
+      "delete": {
+        "tags": [
+          "app-messages"
+        ],
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "name": "messageId",
+            "description": "The Mongo Id of message which will be deleted",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The message of given id has been deleted"
+          }
+        }
+      }
+    },
+    "/schedule": {
+      "post": {
+        "tags": [
+          "schedule"
+        ],
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SchedulePayload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Token for authenicated user and room",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Schedule"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "schedule"
+        ],
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The list of user schedules",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Schedule"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/schedule/{scheduleId}": {
+      "get": {
+        "summary": "Get single schedule",
+        "tags": [
+          "schedule"
+        ],
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "name": "scheduleId",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Schedule ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The schedule",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Schedule"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Updates the schedule",
+        "tags": [
+          "schedule"
+        ],
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "name": "scheduleId",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Schedule ID"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SchedulePayload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated schedule",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Schedule"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Changes the schedule's active property",
+        "tags": [
+          "schedule"
+        ],
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "name": "scheduleId",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Schedule ID"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "active": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated schedule",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Schedule"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Removes the schedule",
+        "tags": [
+          "schedule"
+        ],
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "name": "scheduleId",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Schedule ID"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The schedule has been deleted"
+          }
+        }
+      }
+    },
+    "/observation/{observationType}": {
+      "post": {
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "tags": [
+          "observation"
+        ],
+        "summary": "Creates the new observation resource",
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "name": "observationType",
+            "description": "The observation type",
+            "schema": {
+              "$ref": "#/components/schemas/ObservationType"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ObservationPayload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Succesfully created observation resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Observation"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "tags": [
+          "observation"
+        ],
+        "summary": "Returns observations of given type",
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "name": "observationType",
+            "description": "The observation type",
+            "schema": {
+              "$ref": "#/components/schemas/ObservationType"
+            }
+          },
+          {
+            "in": "query",
+            "required": false,
+            "name": "from",
+            "description": "Limits the items from date",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "in": "query",
+            "required": false,
+            "name": "to",
+            "description": "Limits the items to date",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "in": "query",
+            "required": false,
+            "name": "limit",
+            "description": "Limits the max number of returned items",
+            "schema": {
+              "type": "number",
+              "format": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The observations created by user for all patients for given type",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Observation"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/observation/patient/{patientId}": {
+      "get": {
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "tags": [
+          "observation"
+        ],
+        "summary": "Returns observations for given patient",
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "name": "patientId",
+            "description": "The Mongo ID of patient",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "required": false,
+            "name": "from",
+            "description": "Limits the items from date",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "in": "query",
+            "required": false,
+            "name": "to",
+            "description": "Limits the items to date",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "in": "query",
+            "required": false,
+            "name": "limit",
+            "description": "Limits the max number of returned items",
+            "schema": {
+              "type": "number",
+              "format": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The observations created by user for single patient for given type",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Observation"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/observation/patient/{patientId}/{observationType}": {
+      "get": {
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "tags": [
+          "observation"
+        ],
+        "summary": "Returns observations for given patient by type",
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "name": "observationType",
+            "description": "The observation type",
+            "schema": {
+              "$ref": "#/components/schemas/ObservationType"
+            }
+          },
+          {
+            "in": "path",
+            "required": true,
+            "name": "patientId",
+            "description": "The mongo id of patient",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "required": false,
+            "name": "from",
+            "description": "Limits the items from date",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "in": "query",
+            "required": false,
+            "name": "to",
+            "description": "Limits the items to date",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "in": "query",
+            "required": false,
+            "name": "limit",
+            "description": "Limits the max number of returned items",
+            "schema": {
+              "type": "number",
+              "format": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The observations created by user for single patient for given type",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Observation"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/observation/patient/{patientId}/last": {
+      "get": {
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "tags": [
+          "observation"
+        ],
+        "summary": "Returns observations of given type for given patient",
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "name": "patientId",
+            "description": "The Mongo ID of patient",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The observations created by user for single patient",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "BodyWeight": {
+                      "$ref": "#/components/schemas/Observation"
+                    },
+                    "BodyHeight": {
+                      "$ref": "#/components/schemas/Observation"
+                    },
+                    "HeartRate": {
+                      "$ref": "#/components/schemas/Observation"
+                    },
+                    "BodyTemp": {
+                      "$ref": "#/components/schemas/Observation"
+                    },
+                    "BloodPressure": {
+                      "$ref": "#/components/schemas/Observation"
+                    },
+                    "GlucoseLevel": {
+                      "$ref": "#/components/schemas/Observation"
+                    },
+                    "Pain": {
+                      "$ref": "#/components/schemas/Observation"
+                    },
+                    "Activity": {
+                      "$ref": "#/components/schemas/Observation"
+                    },
+                    "Mood": {
+                      "$ref": "#/components/schemas/Observation"
+                    },
+                    "Feeding": {
+                      "$ref": "#/components/schemas/Observation"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/observation/patient/{patientId}/bmi": {
+      "get": {
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "tags": [
+          "observation"
+        ],
+        "summary": "Returns BMI for given patient",
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "name": "patientId",
+            "description": "The Mongo ID of patient",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The BMI calculated for single patient",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "bmi": {
+                      "type": "number",
+                      "description": "BMI value"
+                    },
+                    "interpretation": {
+                      "description": "BMI interpretation",
+                      "$ref": "#/components/schemas/CodeableConcept"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Some data missing to calculate the BMI - body weight or body height"
+          }
+        }
+      }
+    },
+    "/observation/patient/{patientId}/report": {
+      "get": {
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "tags": [
+          "observation"
+        ],
+        "summary": "Returns the pdf file with observations data",
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "name": "patientId",
+            "description": "The mongo id of patient",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "required": true,
+            "name": "observationType",
+            "description": "The observation type",
+            "schema": {
+              "$ref": "#/components/schemas/ObservationType"
+            }
+          },
+          {
+            "in": "query",
+            "required": true,
+            "name": "from",
+            "description": "Limits the items from date",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "in": "query",
+            "required": true,
+            "name": "to",
+            "description": "Limits the items to date",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The observations report in pdf file"
+          },
+          "400": {
+            "description": "Incorrect params"
+          },
+          "404": {
+            "description": "Observations with provided params not found"
+          }
+        }
+      }
+    },
+    "/observation/BloodType": {
+      "put": {
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "tags": [
+          "observation"
+        ],
+        "summary": "Updates latest blood type observation resource",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "patient": {
+                    "type": "string",
+                    "description": "Patient Mongo ID"
+                  },
+                  "value": {
+                    "$ref": "#/components/schemas/BloodTypePayload",
+                    "description": "Value of observation"
+                  },
+                  "note": {
+                    "type": "string",
+                    "description": "note for observation"
+                  },
+                  "method": {
+                    "$ref": "#/components/schemas/ObservationMethod"
+                  },
+                  "effective": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Datetime, when observation has been performed"
+                  }
+                },
+                "required": [
+                  "patient",
+                  "value",
+                  "method",
+                  "effective"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Succesfully updated observation resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Observation"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/appointment": {
+      "post": {
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "tags": [
+          "appointment"
+        ],
+        "summary": "Creates the appointment",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AppointmentPayload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Created appointment resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Appointment"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Incorrect form data"
+          }
+        }
+      },
+      "get": {
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "tags": [
+          "appointment"
+        ],
+        "summary": "Returns the appointments list where user is participant",
+        "parameters": [
+          {
+            "in": "query",
+            "required": false,
+            "name": "from",
+            "description": "Limits the items from date",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "in": "query",
+            "required": false,
+            "name": "to",
+            "description": "Limits the items to date",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "in": "query",
+            "required": false,
+            "name": "limit",
+            "description": "Limits the max number of returned items",
+            "schema": {
+              "type": "number",
+              "format": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The list of appointments",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Appointment"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Incorrect query params"
+          }
+        }
+      }
+    },
+    "/appointment/{appointmentId}": {
+      "get": {
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "tags": [
+          "appointment"
+        ],
+        "summary": "Returns the appointment with given id",
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "name": "appointmentId",
+            "description": "The Fhir id of appointment to be fetched",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The Appointment",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Appointment"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Method not allowed. Only appointment participant can get appointment."
+          }
+        }
+      },
+      "put": {
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "tags": [
+          "appointment"
+        ],
+        "summary": "Updates the appointment",
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "name": "appointmentId",
+            "description": "The fhir id of appointment to be changed",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AppointmentPayload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Created appointment resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Appointment"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Incorrect form data"
+          },
+          "405": {
+            "description": "Method not allowed. Only appointment participant can update the appointment."
+          }
+        }
+      }
+    },
+    "/appointment/{appointmentId}/status": {
+      "patch": {
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "tags": [
+          "appointment"
+        ],
+        "summary": "CHanges the appointment status",
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "name": "appointmentId",
+            "description": "The fhir id of appointment to be changed",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "$ref": "#/components/schemas/AppointmentStatus"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated appointment resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Appointment"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Incorrect form data"
+          },
+          "405": {
+            "description": "Method not allowed. Only appointment participant can update the appointment."
+          }
+        }
+      }
+    },
+    "/appointment/{appointmentId}/participant": {
+      "patch": {
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "tags": [
+          "appointment"
+        ],
+        "summary": "Appends new participant to appointment",
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "name": "appointmentId",
+            "description": "The fhir id of appointment to be changed",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "participant": {
+                    "type": "string",
+                    "description": "The Mongo Id of participant to be added to appointment"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated appointment resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Appointment"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Incorrect form data"
+          },
+          "405": {
+            "description": "Method not allowed. Only appointment participant can update the appointment."
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "tags": [
+          "appointment"
+        ],
+        "summary": "Removes participant to appointment",
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "name": "appointmentId",
+            "description": "The fhir id of appointment to be changed",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "participant": {
+                    "type": "string",
+                    "description": "The Mongo Id of participant to be removed from appointment"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated appointment resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Appointment"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Incorrect form data"
+          },
+          "405": {
+            "description": "Method not allowed. Only appointment participant can update the appointment."
+          }
+        }
+      }
+    },
+    "/bthub/register": {
+      "post": {
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "tags": [
+          "bthub"
+        ],
+        "summary": "Registers the device for patient",
+        "responses": {
+          "200": {
+            "description": "Successfuly registrated bthub",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Device"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Incorrect data in request body"
+          },
+          "401": {
+            "description": "Unauthorized request"
+          },
+          "405": {
+            "description": "User requesting for the device registration must be in the same care-team with the patient"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "patientId": {
+                    "type": "string",
+                    "description": "The MongoDB id of patient who is the device user"
+                  },
+                  "serialNumber": {
+                    "type": "string",
+                    "description": "The device serial number"
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "The device name"
+                  },
+                  "model": {
+                    "type": "string",
+                    "description": "The device model"
+                  },
+                  "parent": {
+                    "description": "The device's reference which is the hub for registered device",
+                    "$ref": "#/components/schemas/Reference"
+                  }
+                },
+                "required": [
+                  "patientId",
+                  "serialNumber"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bthub": {
+      "get": {
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "tags": [
+          "bthub"
+        ],
+        "summary": "Returns all devices registered for patient",
+        "responses": {
+          "200": {
+            "description": "The devices list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Device"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bthub/{serialNumber}": {
+      "get": {
+        "security": [
+          {
+            "xAuthToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "serialNumber",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "bthub"
+        ],
+        "summary": "Returns devices with given id",
+        "responses": {
+          "200": {
+            "description": "The device object"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Address": {
+        "type": "object",
+        "properties": {
+          "use": {
+            "$ref": "#/components/schemas/AddressUse"
+          },
+          "type": {
+            "$ref": "#/components/schemas/AddressType"
+          },
+          "text": {
+            "type": "string"
+          },
+          "line": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "postalCode": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "use",
+          "type",
+          "line",
+          "city"
+        ]
+      },
+      "AddressType": {
+        "type": "string",
+        "enum": [
+          "postal",
+          "physical",
+          "both"
+        ]
+      },
+      "AddressUse": {
+        "type": "string",
+        "enum": [
+          "home",
+          "work",
+          "temp",
+          "old",
+          "billing"
+        ]
+      },
+      "Annotation": {
+        "type": "object",
+        "properties": {
+          "authorReference": {
+            "description": "Reference of autrhor of annotation",
+            "$ref": "#/components/schemas/Reference"
+          },
+          "time": {
+            "type": "string",
+            "description": "time when annotation has been created"
+          },
+          "text": {
+            "description": "The text of annotation",
+            "type": "string"
+          }
+        },
+        "required": [
+          "authorReference",
+          "time",
+          "text"
+        ]
+      },
+      "AppMessage": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "AppMessage Mongo Id"
+          },
+          "message": {
+            "type": "string",
+            "description": "Message content"
+          },
+          "from": {
+            "type": "string",
+            "description": "Sender's Mongo Id"
+          },
+          "to": {
+            "type": "string",
+            "description": "Recipient's Mongo Id"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "WHen app message  has been created"
+          },
+          "action": {
+            "type": "object",
+            "properties": {
+              "actionType": {
+                "$ref": "#/components/schemas/AppMessageActionType"
+              },
+              "url": {
+                "type": "string",
+                "description": "Internal path or external url"
+              }
+            }
+          }
+        }
+      },
+      "AppMessageActionType": {
+        "type": "string",
+        "enum": [
+          "INTERNAL",
+          "EXTERNAL"
+        ],
+        "description": "How the app message should be handled - in app (INETRNAL) or on the backend (EXTERNAL)"
+      },
+      "Appointment": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/AppointmentStatus"
+          },
+          "description": {
+            "type": "string"
+          },
+          "participant": {
+            "type": "array",
+            "description": "Participants involved in appointment",
+            "items": {
+              "$ref": "#/components/schemas/AppointmentParticipant"
+            }
+          },
+          "created": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The date that this appointment was initially created"
+          },
+          "start": {
+            "type": "string",
+            "description": "When appointment is to take place",
+            "format": "date-time"
+          },
+          "end": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When appointment is to conclude"
+          },
+          "priority": {
+            "type": "integer",
+            "description": "Appointment priority",
+            "minimum": 0,
+            "maximum": 2
+          },
+          "appointmentType": {
+            "$ref": "#/components/schemas/CodeableConcept"
+          }
+        }
+      },
+      "AppointmentParticipant": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CodeableConcept"
+            },
+            "description": "Role of participant in the appointment"
+          },
+          "actor": {
+            "$ref": "#/components/schemas/Reference",
+            "description": "Person; Location/HealthcareService or Device"
+          },
+          "required": {
+            "$ref": "#/components/schemas/AppointmentParticipantRequired"
+          },
+          "status": {
+            "$ref": "#/components/schemas/AppointmentParticipantStatus"
+          }
+        }
+      },
+      "AppointmentParticipantStatus": {
+        "type": "string",
+        "enum": [
+          "accepted",
+          "declined",
+          "tentative",
+          "needsAction"
+        ],
+        "description": "The status of appointment accepttion"
+      },
+      "AppointmentParticipantRequired": {
+        "type": "string",
+        "enum": [
+          "required",
+          "optional",
+          "information-only"
+        ],
+        "description": "Info about requirement of participant"
+      },
+      "AppointmentStatus": {
+        "type": "string",
+        "enum": [
+          "proposed",
+          "pending",
+          "booked",
+          "arrived",
+          "fulfilled",
+          "cancelled",
+          "noshow",
+          "enteredInError",
+          "checkedIn",
+          "waitlist"
+        ]
+      },
+      "AppointmentPayload": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string",
+            "description": "The appointment description"
+          },
+          "patient": {
+            "type": "string",
+            "description": "The Mongo id of patient for who's appointment is"
+          },
+          "specialist": {
+            "type": "string",
+            "description": "The Mongo id of specialist involved in the appointment"
+          },
+          "start": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The start date-time of the appointment"
+          },
+          "end": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The end date-time of the appointment"
+          },
+          "priority": {
+            "type": "integer",
+            "description": "Appointment priority",
+            "minimum": 0,
+            "maximum": 2
+          }
+        }
+      },
+      "Attachment": {
+        "type": "object",
+        "properties": {
+          "contentType": {
+            "type": "string",
+            "description": "mime type of file"
+          },
+          "data": {
+            "description": "base64 encoded file data",
+            "type": "string"
+          },
+          "url": {
+            "description": "url to get file",
+            "type": "string"
+          },
+          "size": {
+            "description": "file sizein bytes",
+            "type": "number"
+          },
+          "hash": {
+            "type": "string"
+          },
+          "title": {
+            "description": "original file name",
+            "type": "string"
+          },
+          "creation": {
+            "description": "the ISO Date when created",
+            "type": "string"
+          }
+        },
+        "required": [
+          "contentType",
+          "size",
+          "title",
+          "creation"
+        ]
+      },
+      "BloodType": {
+        "type": "string",
+        "enum": [
+          "O",
+          "A",
+          "B",
+          "AB"
+        ],
+        "description": "Blood type value"
+      },
+      "BloodTypePayload": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/BloodType"
+          },
+          "rh": {
+            "$ref": "#/components/schemas/RhesusFactor"
+          }
+        },
+        "required": [
+          "type",
+          "rh"
+        ]
+      },
+      "RhesusFactor": {
+        "type": "string",
+        "enum": [
+          "positive",
+          "negative"
+        ],
+        "description": "Rhesus factor"
+      },
+      "CareTeam": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "resourceType": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "careTeamStatus": {
+            "type": "string",
+            "enum": [
+              "proposed",
+              "active",
+              "suspended",
+              "inactive",
+              "enteredInError"
+            ]
+          },
+          "participant": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CareTeamParticipant"
+            }
+          }
+        }
+      },
+      "CareTeamParticipant": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "array",
+            "items": {
+              "properties": {
+                "coding": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "text": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "member": {
+            "type": "object",
+            "properties": {
+              "reference": {
+                "type": "string"
+              },
+              "type": {
+                "$ref": "#/components/schemas/CareTeamParticipantType"
+              }
+            }
+          }
+        }
+      },
+      "CareTeamParticipantType": {
+        "type": "string",
+        "enum": [
+          "Patient",
+          "RelatedPerson",
+          "Practitioner"
+        ]
+      },
+      "ChargeItem": {
+        "type": "object",
+        "properties": {
+          "resourceType": {
+            "type": "string",
+            "enum": [
+              "ChargeItem"
+            ]
+          },
+          "id": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ChargeItemStatus"
+          },
+          "code": {
+            "$ref": "#/components/schemas/CodeableConcept"
+          },
+          "note": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Annotation"
+            }
+          },
+          "subject": {
+            "$ref": "#/components/schemas/Reference"
+          },
+          "occurrence": {
+            "type": "string"
+          },
+          "performer": {
+            "type": "object",
+            "properties": {
+              "actor": {
+                "$ref": "#/components/schemas/Reference"
+              }
+            }
+          },
+          "priceOverride": {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "number"
+              },
+              "currency": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "value",
+              "currency"
+            ]
+          },
+          "supportingInformation": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Reference"
+            }
+          }
+        },
+        "required": [
+          "resourceType",
+          "id",
+          "status",
+          "code",
+          "note",
+          "subject",
+          "occurence",
+          "performer",
+          "priceOverride",
+          "supportingInformation"
+        ]
+      },
+      "ChargeItemStatus": {
+        "type": "string",
+        "enum": [
+          "MEDICINES",
+          "SHOPPING",
+          "DOCTOR_APP",
+          "OFFICIAL",
+          "OTHER"
+        ]
+      },
+      "ChargeItemStatusType": {
+        "type": "string",
+        "enum": [
+          "planned",
+          "billable",
+          "notBillable",
+          "aborted",
+          "billed",
+          "enteredInError",
+          "unknown"
+        ]
+      },
+      "CodeableConcept": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string"
+          },
+          "coding": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CodeableConceptCode"
+            }
+          }
+        },
+        "required": [
+          "coding"
+        ]
+      },
+      "CodeableConceptCode": {
+        "type": "object",
+        "properties": {
+          "system": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "display": {
+            "type": "string"
+          },
+          "userSelected": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "system",
+          "code"
+        ]
+      },
+      "ContactPoint": {
+        "type": "object",
+        "properties": {
+          "system": {
+            "$ref": "#/components/schemas/ContactPointSystem"
+          },
+          "value": {
+            "type": "string"
+          },
+          "use": {
+            "$ref": "#/components/schemas/ContactPointUse"
+          },
+          "rank": {
+            "type": "number"
+          },
+          "period": {
+            "type": "object",
+            "properties": {
+              "start": {
+                "type": "string"
+              },
+              "end": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "required": [
+          "use",
+          "value",
+          "system"
+        ]
+      },
+      "ContactPointSystem": {
+        "type": "string",
+        "enum": [
+          "phone",
+          "fax",
+          "email",
+          "pager",
+          "url",
+          "sms",
+          "other"
+        ]
+      },
+      "ContactPointUse": {
+        "type": "string",
+        "enum": [
+          "home",
+          "work",
+          "temp",
+          "old",
+          "mobile"
+        ]
+      },
+      "Device": {
+        "type": "object",
+        "properties": {
+          "resourceType": {
+            "type": "string",
+            "enum": [
+              "Device"
+            ]
+          },
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          },
+          "id": {
+            "type": "string"
+          },
+          "udiCarrier": {
+            "type": "object",
+            "properties": {
+              "deviceIdentifier": {
+                "type": "string"
+              }
+            }
+          },
+          "status": {
+            "$ref": "#/components/schemas/DeviceStatus"
+          },
+          "deviceName": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "udiLabelName",
+                    "userFriendlyName",
+                    "patientReportedName",
+                    "manufacturerName",
+                    "modelName",
+                    "other"
+                  ]
+                }
+              }
+            }
+          },
+          "patient": {
+            "$ref": "#/components/schemas/Reference"
+          },
+          "parent": {
+            "$ref": "#/components/schemas/Reference"
+          },
+          "note": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Annotation"
+            }
+          }
+        }
+      },
+      "DeviceStatus": {
+        "type": "string",
+        "enum": [
+          "active",
+          "inactive",
+          "entered-in-error",
+          "unknown"
+        ]
+      },
+      "DictionaryItem": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "display": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "display"
+        ]
+      },
+      "DictionaryType": {
+        "type": "string",
+        "enum": [
+          "AcademicTitles",
+          "CareTeamRoles",
+          "QualificationCode",
+          "IdentifierType",
+          "AppointmentParticipantRole",
+          "BloodPressure",
+          "BloodTypeElement",
+          "BmiInterpretation",
+          "ChargeItemType",
+          "DocumentType",
+          "FeedingComponents",
+          "ObservationCategory",
+          "ObservationInterpretation",
+          "ObservationMethod",
+          "ObservationType",
+          "ServiceRequestType",
+          "VisitType",
+          "MedicalSpecialization",
+          "PractitionerRole",
+          "FamilyRelations"
+        ]
+      },
+      "DocumentReference": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "current",
+              "superseded",
+              "enteredInError"
+            ]
+          },
+          "docStatus": {
+            "type": "string",
+            "enum": [
+              "preliminary",
+              "final",
+              "amended",
+              "enteredInError"
+            ]
+          },
+          "subject": {
+            "$ref": "#/components/schemas/Reference"
+          },
+          "author": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Reference"
+            }
+          },
+          "content": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "attachment": {
+                  "$ref": "#/components/schemas/Attachment"
+                }
+              }
+            }
+          },
+          "date": {
+            "type": "string"
+          },
+          "type": {
+            "$ref": "#/components/schemas/CodeableConcept"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "Feeding": {
+        "type": "object",
+        "properties": {
+          "method": {
+            "$ref": "#/components/schemas/FeedingMethod"
+          },
+          "type": {
+            "$ref": "#/components/schemas/FeedingType"
+          },
+          "value": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "type",
+          "method"
+        ]
+      },
+      "FeedingMethod": {
+        "type": "string",
+        "description": "Method of feeding",
+        "enum": [
+          "oral",
+          "probe",
+          "peg"
+        ]
+      },
+      "FeedingType": {
+        "type": "string",
+        "enum": [
+          "house",
+          "commercial"
+        ],
+        "description": "The type of feeding"
+      },
+      "Gender": {
+        "type": "string",
+        "enum": [
+          "male",
+          "female",
+          "other",
+          "unknown"
+        ]
+      },
+      "HumanName": {
+        "type": "object",
+        "properties": {
+          "use": {
+            "$ref": "#/components/schemas/NameUse"
+          },
+          "family": {
+            "type": "string"
+          },
+          "given": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "NameUse": {
+        "type": "string",
+        "enum": [
+          "usual",
+          "official",
+          "temp",
+          "nickname",
+          "anonymous",
+          "old",
+          "maiden"
+        ],
+        "description": "How the name is used"
+      },
+      "Reference": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "Patient",
+              "RelatedPerson",
+              "Practitioner",
+              "PractitionerRole",
+              "Location",
+              "CareTeam",
+              "Person",
+              "Bundle",
+              "ServiceRequest"
+            ]
+          },
+          "reference": {
+            "type": "string"
+          }
+        }
+      },
+      "CustomError": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "enum": [
+              "NO_TOKEN_PROVIDED",
+              "INVALID_TOKEN",
+              "INVALID_CREDENTIALS",
+              "MAX_LOGIN_ATTEMPTS_CODE",
+              "USER_NOT_FOUND",
+              "CAPTCHA_SITE_VERIFICATION_FAILED",
+              "USER_EMAIL_TAKEN",
+              "INSUFFICIENT_PRIVILEGES",
+              "INCORRECT_FORM_DATA"
+            ]
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "msg": {
+                  "type": "string"
+                },
+                "param": {
+                  "type": "string"
+                },
+                "location": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "required": [
+          "code"
+        ],
+        "description": "Incorrect data has been provided"
+      },
+      "RelatedPerson": {
+        "type": "object",
+        "properties": {
+          "resourceType": {
+            "type": "string",
+            "enum": [
+              "RelatedPerson"
+            ]
+          },
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          },
+          "id": {
+            "type": "string"
+          },
+          "extension": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResourceExtension"
+            }
+          },
+          "name": {
+            "$ref": "#/components/schemas/HumanName"
+          },
+          "telecom": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContactPoint"
+            }
+          },
+          "gender": {
+            "$ref": "#/components/schemas/Gender"
+          },
+          "address": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Address"
+            }
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "patient": {
+            "$ref": "#/components/schemas/Reference"
+          },
+          "photo": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Attachment"
+            }
+          }
+        },
+        "required": [
+          "active",
+          "name",
+          "id",
+          "meta",
+          "resourceType"
+        ]
+      },
+      "FamilyRelation": {
+        "type": "string",
+        "enum": [
+          "HUSB",
+          "WIFE",
+          "SON",
+          "DAU",
+          "FTH",
+          "MTH",
+          "GRPRN",
+          "GGRPRN",
+          "OTH"
+        ],
+        "description": "Family relation RelatedPerson - Patient"
+      },
+      "Patient": {
+        "type": "object",
+        "properties": {
+          "resourceType": {
+            "type": "string",
+            "enum": [
+              "Patient"
+            ]
+          },
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          },
+          "id": {
+            "type": "string"
+          },
+          "extension": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResourceExtension"
+            }
+          },
+          "name": {
+            "$ref": "#/components/schemas/HumanName"
+          },
+          "telecom": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContactPoint"
+            }
+          },
+          "gender": {
+            "$ref": "#/components/schemas/Gender"
+          },
+          "address": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Address"
+            }
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "patient": {
+            "$ref": "#/components/schemas/Reference"
+          },
+          "photo": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Attachment"
+            }
+          }
+        },
+        "required": [
+          "active",
+          "resourceType",
+          "meta",
+          "id",
+          "name",
+          "telcom"
+        ]
+      },
+      "Practitioner": {
+        "type": "object",
+        "properties": {
+          "resourceType": {
+            "type": "string",
+            "enum": [
+              "Practitioner"
+            ]
+          },
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          },
+          "id": {
+            "type": "string"
+          },
+          "extension": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResourceExtension"
+            }
+          },
+          "name": {
+            "$ref": "#/components/schemas/HumanName"
+          },
+          "telecom": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContactPoint"
+            }
+          },
+          "gender": {
+            "$ref": "#/components/schemas/Gender"
+          },
+          "address": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Address"
+            }
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "qualification": {
+            "$ref": "#/components/schemas/CodeableConcept"
+          },
+          "patient": {
+            "$ref": "#/components/schemas/Reference"
+          },
+          "photo": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Attachment"
+            }
+          }
+        },
+        "required": [
+          "active",
+          "resourceType",
+          "meta",
+          "id",
+          "name"
+        ]
+      },
+      "PractitionerRoleCode": {
+        "type": "object",
+        "properties": {
+          "coding": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "system": {
+                  "type": "string",
+                  "enum": [
+                    "/ValueSet/PractitionerRole"
+                  ]
+                },
+                "code": {
+                  "$ref": "#/components/schemas/QualificationCode"
+                },
+                "display": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      },
+      "SpecialityCode": {
+        "type": "object",
+        "properties": {
+          "coding": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "system": {
+                  "type": "string",
+                  "enum": [
+                    "/ValueSet/MedicalSpecialization"
+                  ]
+                },
+                "code": {
+                  "type": "string",
+                  "enum": [
+                    "221214",
+                    "221260",
+                    "0731",
+                    "0707",
+                    "0740",
+                    "0797",
+                    "0743",
+                    "0744",
+                    "0721",
+                    "0730",
+                    "0747",
+                    "0748",
+                    "0752",
+                    "0719",
+                    "0723",
+                    "0801",
+                    "0724",
+                    "0725",
+                    "0727",
+                    "0726",
+                    "0728",
+                    "0757",
+                    "0729",
+                    "0782",
+                    "0786"
+                  ]
+                },
+                "display": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      },
+      "Telcom": {
+        "type": "object",
+        "properties": {
+          "system": {
+            "$ref": "#/components/schemas/TelcomSystem"
+          },
+          "value": {
+            "type": "string"
+          },
+          "use": {
+            "type": "string"
+          }
+        }
+      },
+      "TelcomSystem": {
+        "type": "string",
+        "enum": [
+          "phone",
+          "fax",
+          "email",
+          "pager",
+          "url",
+          "sms",
+          "other"
+        ]
+      },
+      "UserSettings": {
+        "type": "object",
+        "description": "User settings",
+        "properties": {
+          "messages": {
+            "type": "boolean"
+          },
+          "notifications": {
+            "type": "boolean"
+          },
+          "measurements": {
+            "type": "boolean"
+          },
+          "uid": {
+            "type": "string"
+          }
+        }
+      },
+      "CompositionResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Fhir resource id"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          },
+          "files": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DocumentReference"
+            },
+            "description": "Files attached to the resource"
+          },
+          "type": {
+            "$ref": "#/components/schemas/CompositionDocumentType"
+          },
+          "patient": {
+            "type": "string",
+            "description": "The patient's MongoDB id"
+          }
+        }
+      },
+      "CompositionDocumentType": {
+        "type": "string",
+        "enum": [
+          "bill",
+          "recipe",
+          "medicalReport",
+          "testResult",
+          "other"
+        ],
+        "description": "The type of composition"
+      },
+      "ServiceRequest": {
+        "type": "object",
+        "properties": {
+          "resourceType": {
+            "type": "string",
+            "enum": [
+              "ServiceRequest"
+            ]
+          },
+          "status": {
+            "$ref": "#/components/schemas/ServiceRequestStatus"
+          },
+          "priority": {
+            "$ref": "#/components/schemas/ServiceRequestPriority"
+          },
+          "subject": {
+            "description": "Reference of Patient who service request concerns",
+            "$ref": "#/components/schemas/Reference"
+          },
+          "requester": {
+            "description": "Reference of Person who request service",
+            "$ref": "#/components/schemas/Reference"
+          },
+          "performer": {
+            "description": "Reference of Person who should perform requested service",
+            "$ref": "#/components/schemas/Reference"
+          },
+          "note": {
+            "description": "The info text for service request",
+            "$ref": "#/components/schemas/Annotation"
+          },
+          "code": {
+            "description": "The code (type) of service request",
+            "$ref": "#/components/schemas/CodeableConcept"
+          },
+          "occurrenceDateTime": {
+            "description": "When service request should be performed",
+            "type": "string"
+          }
+        }
+      },
+      "ServiceRequestPayload": {
+        "type": "object",
+        "properties": {
+          "patientId": {
+            "description": "Mongo id of Patient who service request concerns",
+            "type": "string"
+          },
+          "performerId": {
+            "description": "Mongo id of service request performer",
+            "type": "string"
+          },
+          "noteText": {
+            "description": "Service request note",
+            "type": "string"
+          },
+          "occurrenceDateTime": {
+            "description": "When service request should be performed. The accepted format is YYY, YYYY-MM, YYYY-MM-DD or YYYY-MM-DDThh:mm:ss+zz:zz, e.g. 2018, 1973-06, 1905-08-23, 2015-02-07T13:28:17-05:00 or 2017-01-01T00:00:00.000Z",
+            "type": "string"
+          },
+          "code": {
+            "description": "The type of service request",
+            "type": "string",
+            "enum": [
+              "SHOPPING",
+              "MEDICINES",
+              "DOCTOR_APP",
+              "TRANSPORT",
+              "OTHER"
+            ]
+          }
+        }
+      },
+      "ServiceRequestStatus": {
+        "type": "string",
+        "enum": [
+          "draft",
+          "active",
+          "onHold",
+          "revoked",
+          "completed",
+          "enteredInError",
+          "unknown"
+        ]
+      },
+      "ServiceRequestPriority": {
+        "type": "string",
+        "enum": [
+          "routine",
+          "urgent",
+          "asap",
+          "stat"
+        ]
+      },
+      "Schedule": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          },
+          "id": {
+            "type": "string",
+            "description": "Resource identifier"
+          },
+          "active": {
+            "type": "boolean",
+            "description": "Schedule is active or not"
+          },
+          "actor": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Reference"
+            },
+            "description": "One item array of actors for schedule. Only creator."
+          },
+          "planningHorizon": {
+            "$ref": "#/components/schemas/PlanningHorizon",
+            "description": "Period of time covered by schedule"
+          },
+          "comment": {
+            "type": "string",
+            "description": "Comment"
+          },
+          "extension": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "url": {
+                  "type": "string",
+                  "enum": [
+                    "name"
+                  ],
+                  "description": "The extension url"
+                },
+                "valueString": {
+                  "type": "string",
+                  "description": "The extension value"
+                }
+              }
+            }
+          }
+        }
+      },
+      "SchedulePayload": {
+        "type": "object",
+        "properties": {
+          "planningHorizon": {
+            "$ref": "#/components/schemas/PlanningHorizon",
+            "description": "Period of time covered by schedule"
+          },
+          "comment": {
+            "type": "string",
+            "description": "Comment"
+          },
+          "name": {
+            "type": "string",
+            "description": "Schedule item name"
+          }
+        },
+        "required": [
+          "name",
+          "comment",
+          "planningHorizon"
+        ],
+        "description": "The schedule payload to create the resource"
+      },
+      "PlanningHorizon": {
+        "type": "object",
+        "properties": {
+          "start": {
+            "type": "string",
+            "description": "DateTime in format YYYY, YYYY-MM, YYYY-MM-DD or YYYY-MM-DDThh:mm:ss+zz:zz"
+          },
+          "end": {
+            "type": "string",
+            "description": "DateTime in format YYYY, YYYY-MM, YYYY-MM-DD or YYYY-MM-DDThh:mm:ss+zz:zz"
+          }
+        },
+        "required": [
+          "start",
+          "end"
+        ]
+      },
+      "TwilioTokenType": {
+        "type": "string",
+        "enum": [
+          "video",
+          "chat"
+        ],
+        "description": "The type of Twilio service"
+      },
+      "Observation": {
+        "type": "object",
+        "properties": {
+          "resourceType": {
+            "type": "string",
+            "enum": [
+              "Observation"
+            ]
+          },
+          "id": {
+            "type": "string"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          },
+          "status": {
+            "type": "string"
+          },
+          "subject": {
+            "$ref": "#/components/schemas/Reference"
+          },
+          "performer": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Reference"
+            }
+          },
+          "code": {
+            "$ref": "#/components/schemas/CodeableConcept"
+          },
+          "valueQuantity": {
+            "$ref": "#/components/schemas/Quantity"
+          },
+          "valueCodeableConcept": {
+            "$ref": "#/components/schemas/CodeableConcept"
+          },
+          "valueInteger": {
+            "type": "number"
+          },
+          "valueString": {
+            "type": "string"
+          },
+          "method": {
+            "$ref": "#/components/schemas/CodeableConcept"
+          },
+          "effectveDateTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "component": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "$ref": "#/components/schemas/CodeableConcept"
+                },
+                "valueQuantity": {
+                  "$ref": "#/components/schemas/Quantity"
+                },
+                "valueString": {
+                  "type": "string"
+                },
+                "valueInteger": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        },
+        "required": [
+          "resourceType",
+          "id",
+          "meta",
+          "status",
+          "subject"
+        ]
+      },
+      "ObservationType": {
+        "type": "string",
+        "enum": [
+          "BodyWeight",
+          "BodyHeight",
+          "HeartRate",
+          "BodyTemp",
+          "BloodPressure",
+          "GlucoseLevel",
+          "Pain",
+          "Activity",
+          "Mood",
+          "Feeding"
+        ]
+      },
+      "ObservationMethod": {
+        "type": "string",
+        "description": "Method, how observation has been performed",
+        "enum": [
+          "MAN",
+          "EQU"
+        ]
+      },
+      "ObservationPayload": {
+        "type": "object",
+        "properties": {
+          "patient": {
+            "type": "string",
+            "description": "Patient Mongo ID"
+          },
+          "value": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "$ref": "#/components/schemas/Quantity"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Quantity"
+                }
+              },
+              {
+                "$ref": "#/components/schemas/Feeding"
+              },
+              {
+                "$ref": "#/components/schemas/BloodTypePayload"
+              }
+            ],
+            "description": "Value of observation"
+          },
+          "note": {
+            "type": "string",
+            "description": "The note for observation"
+          },
+          "method": {
+            "$ref": "#/components/schemas/ObservationMethod"
+          },
+          "effective": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Datetime, when observation has been performed"
+          }
+        },
+        "required": [
+          "effective",
+          "patient"
+        ]
+      },
+      "QualificationCode": {
+        "description": "Qualification code of user if Practitioner",
+        "type": "string",
+        "enum": [
+          "PHY",
+          "NRS",
+          "THE",
+          "PSY",
+          "OTH"
+        ]
+      },
+      "Quantity": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "number"
+          },
+          "unit": {
+            "type": "string"
+          },
+          "comparator": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value",
+          "unit"
+        ]
+      },
+      "Meta": {
+        "type": "object",
+        "properties": {
+          "versionId": {
+            "type": "number"
+          },
+          "lastUpdated": {
+            "type": "number"
+          },
+          "source": {
+            "type": "string"
+          }
+        },
+        "description": "Resourse metadata"
+      },
+      "ResourceExtension": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "valueString": {
+            "type": "string"
+          },
+          "valueCodeableConcept": {
+            "$ref": "#/components/schemas/CodeableConcept"
+          }
+        },
+        "required": [
+          "url"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "xAuthToken": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-auth-token"
+      }
+    }
+  }
+}

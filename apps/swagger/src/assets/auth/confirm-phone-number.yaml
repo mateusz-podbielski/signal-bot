@@ -1,0 +1,29 @@
+patch:
+  tags:
+    - auth
+  summary: Confirms phone number with given code
+  parameters:
+    - in: path
+      name: phoneNumber
+      required: true
+      schema:
+        type: string
+        example: +48500600700
+  requestBody:
+    content:
+      application/json:
+        schema:
+          properties:
+            code:
+              type: string
+  responses:
+    204:
+      description: Success response. Phone number confirmed
+    400:
+      description: Incorrect phone number. Already in database
+    404:
+      description: Phone Number not found
+    408:
+      description: Code outdated
+    500:
+      description: Unsuspected error

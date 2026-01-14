@@ -1,0 +1,45 @@
+type: object
+properties:
+  resourceType:
+    type: string
+    enum:
+      - Observation
+  id:
+    type: string
+  meta:
+    $ref: 'resource-meta.yaml'
+  status:
+    type: string
+  subject:
+    $ref: 'reference.yaml'
+  performer:
+    type: array
+    items:
+      $ref: 'reference.yaml'
+  code:
+    $ref: 'codeable-concept.yaml'
+  valueQuantity:
+    $ref: 'quantity.yaml'
+  valueCodeableConcept:
+    $ref: 'codeable-concept.yaml'
+  valueInteger:
+    type: number
+  valueString:
+    type: string
+  method:
+    $ref: 'codeable-concept.yaml'
+  effectveDateTime:
+    type: string
+    format: date-time
+  component:
+    type: array
+    items:
+      $ref: 'observation-component.yaml'
+required:
+  - resourceType
+  - id
+  - meta
+  - status
+  - subject
+#  referenceRange?: (ReferenceRange | DBReferenceRange)[];
+#  interpretation?: CodeableConcept;

@@ -1,0 +1,22 @@
+type: object
+properties:
+  patient:
+    type: string
+    description: Patient Mongo ID
+  value:
+    $ref: 'blood-type-payload.yaml'
+    description: Value of observation
+  note:
+    type: string
+    description: note for observation
+  method:
+    $ref: 'observation-method.yaml'
+  effective:
+    type: string
+    format: date-time
+    description: Datetime, when observation has been performed
+required:
+  - patient
+  - value
+  - method
+  - effective

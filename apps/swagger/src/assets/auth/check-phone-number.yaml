@@ -1,0 +1,18 @@
+get:
+  tags:
+    - auth
+  summary: Check phone number in database
+  parameters:
+    - in: path
+      name: phoneNumber
+      required: true
+      schema:
+        type: string
+        example: +48500600700
+  responses:
+    204:
+      description: Success response. Phone number not in database
+    400:
+      description: Incorrect phone number. Already in database
+    500:
+      description: Unsuspected error

@@ -1,0 +1,9 @@
+type: object
+properties:
+  type:
+    $ref: 'blood-type.yaml'
+  rh:
+    $ref: 'rhesus-factor.yaml'
+required:
+  - type
+  - rh

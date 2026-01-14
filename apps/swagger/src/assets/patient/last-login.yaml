@@ -1,0 +1,23 @@
+get:
+  security:
+    - xAuthToken: []
+  tags:
+    - patient
+  summary: Get last login date of patient
+  parameters:
+    - in: path
+      required: true
+      name: patientId
+      schema:
+        type: string
+  responses:
+    200:
+      description: Last login date
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              lastLogin:
+                type: string
+                format: date-time

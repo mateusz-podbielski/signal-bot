@@ -1,0 +1,47 @@
+post:
+  summary: Crates new charge item
+  tags:
+    - charge-item
+  security:
+    - xAuthToken: [ ]
+  requestBody:
+    content:
+      multipart/form-data:
+        schema:
+          $ref: '../schemas/charge-item-payload.yaml'
+  responses:
+    200:
+      description: Newly created charge item
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              chargeItem:
+                $ref: '../schemas/charge-item.yaml'
+              bills:
+                type: array
+                items:
+                  $ref: '../schemas/attachment.yaml'
+get:
+  summary: Returns the list of charge items created by user
+  tags:
+    - charge-item
+  security:
+    - xAuthToken: [ ]
+  responses:
+    200:
+      description: The list of charge items
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                chargeItem:
+                  $ref: '../schemas/charge-item.yaml'
+                bills:
+                  type: array
+                  items:
+                    $ref: '../schemas/attachment.yaml'

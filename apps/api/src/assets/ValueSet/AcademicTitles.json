@@ -1,0 +1,33 @@
+{
+  "resourceType": "ValueSet",
+  "id": "AcademicTitles",
+  "name": "Tytuły Naukowe",
+  "status": "active",
+  "version": 2,
+  "publisher": "SignalBot",
+  "url": "/ValueSet/AcademicTitles",
+  "compose": {
+    "include": [
+      {
+        "concept": [
+          {
+            "code": "lek.med.",
+            "display": "lek.med."
+          },
+          {
+            "code": "dr.n.med.",
+            "display": "dr.n.med."
+          },
+          {
+            "code": "dr.hab.n.med.",
+            "display": "dr.hab.n.med."
+          },
+          {
+            "code": "prof.dr.hab.",
+            "display": "prof.dr.hab."
+          }
+        ]
+      }
+    ]
+  }
+}

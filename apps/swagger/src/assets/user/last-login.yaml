@@ -1,0 +1,17 @@
+get:
+  security:
+    - xAuthToken: [ ]
+  tags:
+    - user
+  summary: Get user last login date
+  responses:
+    200:
+      description: User last login date
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              lastLogin:
+                type: string
+                format: date-time

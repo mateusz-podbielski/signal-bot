@@ -1,0 +1,20 @@
+get:
+  security:
+    - xAuthToken: [ ]
+  tags:
+    - patient
+  summary: Returns documents connected with patient
+  parameters:
+    - in: path
+      required: true
+      name: patientId
+      description: Mongo Id of patient
+      schema:
+        type: string
+  responses:
+    200:
+      description: Documents connected with patient
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/composition-response.yaml'

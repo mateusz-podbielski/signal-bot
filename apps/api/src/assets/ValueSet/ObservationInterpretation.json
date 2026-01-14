@@ -1,0 +1,29 @@
+{
+  "resourceType": "ValueSet",
+  "id": "ObservationInterpretation",
+  "name": "Interpretacja obserwacji (pomiaru)",
+  "status": "active",
+  "publisher": "SignalBot",
+  "version": 2,
+  "url": "/ValueSet/ObservationInterpretation",
+  "compose": {
+    "include": [
+      {
+        "concept": [
+          {
+            "code": "H",
+            "display": "Za dużo"
+          },
+          {
+            "code": "N",
+            "display": "Wartość prawidłowa"
+          },
+          {
+            "code": "L",
+            "display": "Za mało"
+          }
+        ]
+      }
+    ]
+  }
+}

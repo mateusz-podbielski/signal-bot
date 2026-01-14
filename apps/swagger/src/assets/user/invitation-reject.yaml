@@ -1,0 +1,26 @@
+put:
+  summary: Reject invitation
+  description: Rejects invitation with given id
+  security:
+    - xAuthToken: []
+  tags:
+    - user
+  parameters:
+    - in: path
+      name: invitationId
+      description: Invitation's id to be rejected
+      required: true
+      schema:
+        type: string
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+  responses:
+    200:
+      description: Invitation has been succesfuly rejected
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/care-team.yaml'

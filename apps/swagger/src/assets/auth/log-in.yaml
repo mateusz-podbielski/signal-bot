@@ -1,0 +1,36 @@
+post:
+  tags:
+    - auth
+  summary: Authenticate user by phoneNumber and password
+  requestBody:
+    description: Authenticate data
+    content:
+      application/json:
+        schema:
+          properties:
+            phoneNumber:
+              type: string
+            password:
+              type: string
+          required:
+            - phoneNumber
+            - password
+  responses:
+    '200':
+      description: Authenticated user response
+      content:
+        application/json:
+          schema:
+            properties:
+              token:
+                type: string
+    '400':
+      description: Incorrect or missing authentication data
+    '403':
+      description: Incorrect user credentials
+    '404':
+      description: Phone number not found in database
+    '405':
+      description: User is not confirmed
+    '408':
+      description: Max failed login attemps

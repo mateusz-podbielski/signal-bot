@@ -1,0 +1,33 @@
+get:
+  tags:
+    - user
+  security:
+    - xAuthToken: []
+  summary: Get user data
+  responses:
+    200:
+      description: User data
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              resourceType:
+                $ref: '../schemas/care-team-participant-type.yaml'
+              id:
+                description: Fhir user Id
+                type: number
+              meta:
+                $ref: '../schemas/resource-meta.yaml'
+              active:
+                type: boolean
+              name:
+                type: array
+                items:
+                  $ref: '../schemas/human-name.yaml'
+              gender:
+                $ref: '../schemas/gender.yaml'
+              address:
+                type: array
+                items:
+                  $ref: '../schemas/address.yaml'

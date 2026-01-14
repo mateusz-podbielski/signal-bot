@@ -1,0 +1,51 @@
+get:
+  security:
+    - xAuthToken: [ ]
+  tags:
+    - appointment
+  summary: Returns the appointment with given id
+  parameters:
+    - in: path
+      required: true
+      name: appointmentId
+      description: The Fhir id of appointment to be fetched
+      schema:
+        type: string
+  responses:
+    200:
+      description: The Appointment
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/appointment.yaml'
+    405:
+      description: Method not allowed. Only appointment participant can get appointment.
+put:
+  security:
+    - xAuthToken: [ ]
+  tags:
+    - appointment
+  summary: Updates the appointment
+  parameters:
+    - in: path
+      required: true
+      name: appointmentId
+      description: The fhir id of appointment to be changed
+      schema:
+        type: string
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: '../schemas/appointment-payload.yaml'
+  responses:
+    200:
+      description: Created appointment resource
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/appointment.yaml'
+    400:
+      description: Incorrect form data
+    405:
+      description: Method not allowed. Only appointment participant can update the appointment.

@@ -1,0 +1,33 @@
+get:
+  tags:
+    - twilio
+  parameters:
+    - in: query
+      name: room
+      description: The name of room to authenticate
+      schema:
+        type: string
+    - in: path
+      name: grantType
+      required: true
+      description: Type of token
+      schema:
+        $ref: '../schemas/twilio-token-type.yaml'
+  security:
+    - xAuthToken: [ ]
+  responses:
+    200:
+      description: Token for authenicated user and room
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              token:
+                type: string
+    400:
+      description: Missing room name, when type is video
+    401:
+      description: User not authenticated (token missing or invalid)
+    403:
+      description: Insufficient privilages

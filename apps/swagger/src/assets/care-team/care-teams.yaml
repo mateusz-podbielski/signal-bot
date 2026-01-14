@@ -1,0 +1,31 @@
+get:
+  security:
+    - xAuthToken: []
+  tags:
+    - user
+  summary: Return care teams for user
+  responses:
+    200:
+      description: the list of care teams where user is involved
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                resourceType:
+                  type: string
+                  description: Resource type (ResourceType.CareTeam)
+                id:
+                  type: string
+                  description: id of care team
+                status:
+                  type: string
+                  enum: [ proposed, active, suspended, inactive, entered-in-error]
+                name:
+                  type: string
+                participant:
+                  type: array
+                  items:
+                    $ref: '../schemas/care-team-participant.yaml'

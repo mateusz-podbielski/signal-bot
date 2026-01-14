@@ -1,0 +1,30 @@
+type: object
+properties:
+  status:
+    $ref: 'appointment-status.yaml'
+  description:
+    type: string
+  participant:
+    type: array
+    description: Participants involved in appointment
+    items:
+      $ref: 'appointment-participant.yaml'
+  created:
+    type: string
+    format: date-time
+    description: The date that this appointment was initially created
+  start:
+    type: string
+    description: When appointment is to take place
+    format: date-time
+  end:
+    type: string
+    format: date-time
+    description: When appointment is to conclude
+  priority:
+    type: integer
+    description: Appointment priority
+    minimum: 0
+    maximum: 2
+  appointmentType:
+    $ref: 'codeable-concept.yaml'

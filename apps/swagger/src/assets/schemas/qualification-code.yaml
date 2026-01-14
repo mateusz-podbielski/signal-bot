@@ -1,0 +1,8 @@
+description: Qualification code of user if Practitioner
+type: string
+enum:
+  - PHY
+  - NRS
+  - THE
+  - PSY
+  - OTH

@@ -1,0 +1,43 @@
+get:
+  security:
+    - xAuthToken: [ ]
+  tags:
+    - observation
+  summary: Returns observations for given patient
+  parameters:
+    - in: path
+      required: true
+      name: patientId
+      description: The Mongo ID of patient
+      schema:
+        type: string
+    - in: query
+      required: false
+      name: from
+      description: Limits the items from date
+      schema:
+        type: string
+        format: date-time
+    - in: query
+      required: false
+      name: to
+      description: Limits the items to date
+      schema:
+        type: string
+        format: date-time
+    - in: query
+      required: false
+      name: limit
+      description: Limits the max number of returned items
+      schema:
+        type: number
+        format: integer
+  responses:
+    200:
+      description: The observations created by user for single patient for given type
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../schemas/observation.yaml'

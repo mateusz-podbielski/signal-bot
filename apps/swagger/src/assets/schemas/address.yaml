@@ -1,0 +1,23 @@
+type: object
+properties:
+  use:
+    $ref: 'address-use.yaml'
+  type:
+    $ref: 'address-type.yaml'
+  text:
+    type: string
+  line:
+    type: array
+    items:
+      type: string
+  postalCode:
+    type: string
+  city:
+    type: string
+  country:
+    type: string
+required:
+  - use
+  - type
+  - line
+  - city

@@ -1,0 +1,12 @@
+type: string
+enum:
+  - BodyWeight
+  - BodyHeight
+  - HeartRate
+  - BodyTemp
+  - BloodPressure
+  - GlucoseLevel
+  - Pain
+  - Activity
+  - Mood
+  - Feeding

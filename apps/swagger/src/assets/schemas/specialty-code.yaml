@@ -1,0 +1,18 @@
+type: object
+properties:
+  coding:
+    type: array
+    items:
+      type: object
+      properties:
+        system:
+          type: string
+          enum:
+            - /ValueSet/MedicalSpecialization
+        code:
+          type: string
+          enum: ['221214', '221260', '0731', '0707', '0740', '0797', '0743', '0744', '0721', '0730', '0747', '0748', '0752', '0719', '0723', '0801', '0724', '0725', '0727', '0726', '0728', '0757', '0729', '0782', '0786']
+        display:
+          type: string
+  text:
+    type: string

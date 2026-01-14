@@ -1,0 +1,17 @@
+type: object
+properties:
+  coding:
+    type: array
+    items:
+      type: object
+      properties:
+        system:
+          type: string
+          enum:
+            - /ValueSet/PractitionerRole
+        code:
+          $ref: 'qualification-code.yaml'
+        display:
+          type: string
+  text:
+    type: string

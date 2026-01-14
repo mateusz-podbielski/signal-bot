@@ -1,0 +1,21 @@
+type: object
+properties:
+  system:
+    $ref: 'contact-point-system.yaml'
+  value:
+    type: string
+  use:
+    $ref: 'contact-point-use.yaml'
+  rank:
+    type: number
+  period:
+    type: object
+    properties:
+      start:
+        type: string
+      end:
+        type: string
+required:
+  - use
+  - value
+  - system

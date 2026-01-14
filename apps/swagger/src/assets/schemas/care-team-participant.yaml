@@ -1,0 +1,20 @@
+type: object
+properties:
+  role:
+    type: array
+    items:
+      properties:
+        coding:
+          type: object
+          properties:
+            code:
+              type: string
+        text:
+          type: string
+  member:
+    type: object
+    properties:
+      reference:
+        type: string
+      type:
+        $ref: '../schemas/care-team-participant-type.yaml'

@@ -1,0 +1,42 @@
+patch:
+  summary: Adds additional file to existing charge-item
+  tags:
+    - charge-item
+  security:
+    - xAuthToken: [ ]
+  parameters:
+    - in: path
+      name: chargeItemId
+      schema:
+        type: string
+      required: true
+  requestBody:
+    content:
+      multipart/form-data:
+        schema:
+          type: object
+          properties:
+            bill:
+              description: The charge item bill
+              type: array
+              items:
+                type: string
+                format: binary
+          required:
+            - bill
+  responses:
+    200:
+      description: ChargeItem with added bills
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              chargeItem:
+                $ref: '../schemas/charge-item.yaml'
+              bills:
+                type: array
+                items:
+                  $ref: '../schemas/attachment.yaml'
+    500:
+      description: Unexpected error

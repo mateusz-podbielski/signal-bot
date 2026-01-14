@@ -1,0 +1,18 @@
+get:
+  security:
+    - xAuthToken: [ ]
+  parameters:
+    - in: path
+      name: serialNumber
+      required: true
+      schema:
+        type: string
+  tags:
+    - bthub
+  summary: Returns devices with given id
+  responses:
+    200:
+      description: The device object
+#      content:
+#        application/json:
+#          $ref: '../schemas/device.yaml'

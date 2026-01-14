@@ -1,0 +1,12 @@
+type: string
+enum:
+  - HUSB
+  - WIFE
+  - SON
+  - DAU
+  - FTH
+  - MTH
+  - GRPRN
+  - GGRPRN
+  - OTH
+description: Family relation RelatedPerson - Patient

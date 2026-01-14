@@ -1,0 +1,41 @@
+get:
+  security:
+    - xAuthToken: [ ]
+  tags:
+    - observation
+  summary: Returns observations of given type for given patient
+  parameters:
+    - in: path
+      required: true
+      name: patientId
+      description: The Mongo ID of patient
+      schema:
+        type: string
+  responses:
+    200:
+      description: The observations created by user for single patient
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              BodyWeight:
+                $ref: '../schemas/observation.yaml'
+              BodyHeight:
+                $ref: '../schemas/observation.yaml'
+              HeartRate:
+                $ref: '../schemas/observation.yaml'
+              BodyTemp:
+                $ref: '../schemas/observation.yaml'
+              BloodPressure:
+                $ref: '../schemas/observation.yaml'
+              GlucoseLevel:
+                $ref: '../schemas/observation.yaml'
+              Pain:
+                $ref: '../schemas/observation.yaml'
+              Activity:
+                $ref: '../schemas/observation.yaml'
+              Mood:
+                $ref: '../schemas/observation.yaml'
+              Feeding:
+                $ref: '../schemas/observation.yaml'

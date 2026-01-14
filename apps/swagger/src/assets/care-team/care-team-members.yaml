@@ -1,0 +1,22 @@
+get:
+  security:
+    - xAuthToken: []
+  tags:
+    - user
+  summary: CareTeam members of given resourceTypes
+  parameters:
+    - in: path
+      name: resourceType
+      required: true
+      schema:
+        $ref: '../schemas/care-team-participant-type.yaml'
+  responses:
+    200:
+      description: The array of CareTeam members of given resourceType
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              type: object
+              description: resource type object

@@ -1,0 +1,45 @@
+{
+  "resourceType": "ValueSet",
+  "id": "IdentifierType",
+  "name": "Typy identyfikatorów",
+  "status": "active",
+  "publisher": "SignalBot",
+  "version": 2,
+  "url": "/ValueSet/IdentifierType",
+  "compose": {
+    "include": [
+      {
+        "concept": [
+          {
+            "code": "PESEL",
+            "display": "Pesel"
+          },
+          {
+            "code": "TAX",
+            "display": "NIP"
+          },
+          {
+            "code": "FACEBOOK",
+            "display": "FacebookId"
+          },
+          {
+            "code": "GOOGLE",
+            "display": "GoogleId"
+          },
+          {
+            "code": "APPLE",
+            "display": "AppleId"
+          },
+          {
+            "code": "MONGO",
+            "display": "MongoDB _id"
+          },
+          {
+            "code": "MD",
+            "display": "Prawo wykonywania zawodu pracownika medycznego"
+          }
+        ]
+      }
+    ]
+  }
+}

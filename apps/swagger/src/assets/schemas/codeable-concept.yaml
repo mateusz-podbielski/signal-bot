@@ -1,0 +1,10 @@
+type: object
+properties:
+  text:
+    type: string
+  coding:
+    type: array
+    items:
+      $ref: 'codeable-concept-code.yaml'
+required:
+  - coding

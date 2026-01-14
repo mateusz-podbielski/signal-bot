@@ -1,0 +1,22 @@
+get:
+  security:
+    - xAuthToken: [ ]
+  tags:
+    - care-team
+  summary: The CareTeam for given patient
+  parameters:
+    - in: path
+      name: patientId
+      description: The Mongo ID of patient
+      required: true
+      schema:
+        type: string
+  responses:
+    '200':
+      description: The CareTeam resource
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/care-team.yaml'
+    '405':
+      description: User and patient are not in the same CareTeam

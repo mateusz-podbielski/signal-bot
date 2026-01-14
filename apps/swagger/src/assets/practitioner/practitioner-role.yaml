@@ -1,0 +1,45 @@
+get:
+  tags:
+    - practitioner
+  security:
+    - xAuthToken: [ ]
+  summary: Get practitioner role for practitioner
+  responses:
+    200:
+      description: User data
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              resourceType:
+                type: string
+                enum:
+                  - PractititionerRole
+              id:
+                type: string
+              identifier:
+                type: array
+                items:
+                  type: object
+              practitioner:
+                type: object
+                properties:
+                  reference:
+                    type: string
+                  type:
+                    type: string
+                    enum:
+                      - Practitioner
+              code:
+                type: array
+                items:
+                  $ref: '../schemas/practitioner-role-code.yaml'
+              specialty:
+                type: array
+                items:
+                  $ref: '../schemas/specialty-code.yaml'
+    405:
+      description: Provided id is not practitioner id
+    500:
+      description: Unknow server error

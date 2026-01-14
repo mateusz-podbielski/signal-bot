@@ -1,0 +1,18 @@
+delete:
+  security:
+    - xAuthToken: []
+  tags:
+    - user
+  summary: Deletes invitation with given invitationId
+  parameters:
+    - in: path
+      name:  invitationId
+      description: Invitation's id to be deleted
+      required: true
+      schema:
+        type: string
+  responses:
+    204:
+      description: Invitation has been deleted successfuly
+    405:
+      description: Method not allowed (usually, when user would like to delete invitation sent by other user)

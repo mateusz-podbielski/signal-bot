@@ -1,0 +1,23 @@
+patch:
+  security:
+    - xAuthToken: []
+  tags:
+    - related-person
+  summary: Patches family relation
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            family-relation:
+              $ref: '../schemas/family-relation.yaml'
+  responses:
+    200:
+      description: Updated RelatedPerson object
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/related-person.yaml'
+    400:
+      description: Incorrect family relation value

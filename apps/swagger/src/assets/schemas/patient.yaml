@@ -1,0 +1,41 @@
+type: object
+properties:
+  resourceType:
+    type: string
+    enum:
+      - Patient
+  meta:
+    $ref: 'resource-meta.yaml'
+  id:
+    type: string
+  extension:
+    type: array
+    items:
+      $ref: 'resource-extension.yaml'
+  name:
+    $ref: 'human-name.yaml'
+  telecom:
+    type: array
+    items:
+      $ref: 'contact-point.yaml'
+  gender:
+    $ref: 'gender.yaml'
+  address:
+    type: array
+    items:
+      $ref: 'address.yaml'
+  active:
+    type: boolean
+  patient:
+    $ref: 'reference.yaml'
+  photo:
+    type: array
+    items:
+      $ref: 'attachment.yaml'
+required:
+  - active
+  - resourceType
+  - meta
+  - id
+  - name
+  - telcom

@@ -1,0 +1,43 @@
+post:
+  security:
+    - xAuthToken: [ ]
+  tags:
+    - bthub
+  summary: Registers the device for patient
+  responses:
+    200:
+      description: Successfuly registrated bthub
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/device.yaml'
+    400:
+      description: Incorrect data in request body
+    401:
+      description: Unauthorized request
+    405:
+      description: User requesting for the device registration must be in the same care-team with the patient
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            patientId:
+              type: string
+              description: The MongoDB id of patient who is the device user
+            serialNumber:
+              type: string
+              description: The device serial number
+            name:
+              type: string
+              description: The device name
+            model:
+              type: string
+              description: The device model
+            parent:
+              description: The device's reference which is the hub for registered device
+              $ref: '../schemas/reference.yaml'
+          required:
+            - patientId
+            - serialNumber

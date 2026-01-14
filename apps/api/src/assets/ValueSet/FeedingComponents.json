@@ -1,0 +1,37 @@
+{
+  "resourceType": "ValueSet",
+  "id": "FeedingComponents",
+  "name": "Elementy żywienia",
+  "status": "active",
+  "publisher": "SignalBot",
+  "version": 3,
+  "url": "/ValueSet/FeedingComponents",
+  "compose": {
+    "include": [
+      {
+        "concept": [
+          {
+            "code": "method",
+            "display": "Metoda żywienia"
+          },
+          {
+            "code": "type",
+            "display": "Typ żywienia"
+          },
+          {
+            "code": "value",
+            "display": "Wartość żywienia"
+          },
+          {
+            "code": "oralType",
+            "display": "Rodzaj pokarmu przy żywieniu doustnym"
+          },
+          {
+            "code": "meal",
+            "display": "Posiłek"
+          }
+        ]
+      }
+    ]
+  }
+}

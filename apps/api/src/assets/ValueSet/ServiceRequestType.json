@@ -1,0 +1,37 @@
+{
+  "resourceType": "ValueSet",
+  "id": "ServiceRequestType",
+  "name": "Typy zadań",
+  "status": "active",
+  "publisher": "SignalBot",
+  "version": 2,
+  "url": "/ValueSet/ServiceRequestType",
+  "compose": {
+    "include": [
+      {
+        "concept": [
+          {
+            "code": "SHOPPING",
+            "display": "Zakupy"
+          },
+          {
+            "code": "MEDICINES",
+            "display": "Zakup leków"
+          },
+          {
+            "code": "DOCTOR_APP",
+            "display": "Wizyty lekarskie"
+          },
+          {
+            "code": "TRANSPORT",
+            "display": "Transport"
+          },
+          {
+            "code": "OTHER",
+            "display": "Inne"
+          }
+        ]
+      }
+    ]
+  }
+}

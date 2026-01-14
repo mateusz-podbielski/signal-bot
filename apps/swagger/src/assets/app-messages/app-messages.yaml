@@ -1,0 +1,14 @@
+get:
+  tags:
+    - app-messages
+  security:
+    - xAuthToken: [ ]
+  responses:
+    200:
+      description: The list of system messages
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../schemas/app-message.yaml'

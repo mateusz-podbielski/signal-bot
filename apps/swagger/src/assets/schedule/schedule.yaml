@@ -1,0 +1,31 @@
+post:
+  tags:
+    - schedule
+  security:
+    - xAuthToken: [ ]
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: '../schemas/schedule-payload.yaml'
+  responses:
+    200:
+      description: Token for authenicated user and room
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/schedule.yaml'
+get:
+  tags:
+    - schedule
+  security:
+    - xAuthToken: [ ]
+  responses:
+    200:
+      description: The list of user schedules
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../schemas/schedule.yaml'

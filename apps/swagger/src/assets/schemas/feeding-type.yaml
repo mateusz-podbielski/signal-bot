@@ -1,0 +1,5 @@
+type: string
+enum:
+  - house
+  - commercial
+description: The type of feeding

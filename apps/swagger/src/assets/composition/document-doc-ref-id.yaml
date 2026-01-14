@@ -1,0 +1,42 @@
+get:
+  tags:
+    - composition
+  security:
+    - xAuthToken: [ ]
+  summary: Retrives the requested files
+  parameters:
+    - in: path
+      required: true
+      name: docRefId
+      description: DocumentReference resource id
+      schema:
+        type: string
+  responses:
+    200:
+      description: Requested file binary data
+delete:
+  tags:
+    - composition
+  security:
+    - xAuthToken: [ ]
+  summary: Deletes or archives all files from document reference
+  parameters:
+    - in: path
+      required: true
+      name: docRefId
+      description: DocumentReference resource id
+      schema:
+        type: string
+  responses:
+    200:
+      description: Effect of deleting the document
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              effect:
+                type: string
+                enum:
+                  - deleted
+                  - archived

@@ -1,0 +1,24 @@
+type: string
+enum:
+  - /ValueSet/MedicalSpecialization
+  - /ValueSet/PractitionerRole
+  - /ValueSet/FamilyRelations
+  - /ValueSet/AcademicTitles
+  - /ValueSet/VisitType
+  - /ValueSet/CareTeamRoles
+  - /ValueSet/QualificationCode
+  - /ValueSet/IdentifierType
+  - /ValueSet/AppointmentParticipantRole
+  - /ValueSet/BloodPressure
+  - /ValueSet/BloodTypeElement
+  - /ValueSet/BmiInterpretation
+  - /ValueSet/ChargeItemType
+  - /ValueSet/DocumentType
+  - /ValueSet/FeedingComponents
+  - /ValueSet/MedicalSpecialization
+  - /ValueSet/ObservationCategory
+  - /ValueSet/ObservationInterpretation
+  - /ValueSet/ObservationMethod
+  - /ValueSet/ObservationType
+  - /ValueSet/ServiceRequestType
+  - /ValueSet/VisitType

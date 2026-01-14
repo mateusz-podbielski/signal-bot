@@ -1,0 +1,35 @@
+type: object
+properties:
+  _id:
+    type: string
+    example: 60435d0ba0011d7a6cc5c765
+    description: MongoDB Invitation identifier
+  uid:
+    type: string
+    example: 60435d0ba0011d7a6cc5c777
+    description: MongoDB Identifier of user, who's sending the invitation
+  phoneNumber:
+    type: string
+    example: 48600700800
+    description: Phone number of user, who's receiving the invitation
+  resourceType:
+    type: string
+    enum: [Patient, RelatedPerson, Practitioner]
+    description: ResourceType of user in careTeam
+  firstName:
+    type: string
+    example: Jan
+    description: firstname of user who's sending the invitation
+  lastName:
+    type: string
+    example: Kowalski
+    description: Lastname of user who's sending the invitation
+  patientId:
+    type: string
+    example: 24
+    description: Fhir Patient identifier, to which member will be appended
+  createdAt:
+    type: string
+    description: The date and time in ISO format, when invitation has been sent
+  tokenId:
+    type: string

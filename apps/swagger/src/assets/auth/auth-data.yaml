@@ -1,0 +1,31 @@
+content:
+  application/json:
+    schema:
+      type: object
+      properties:
+        email:
+          description: User email address
+          type: string
+        phoneNumber:
+          description: User phone number
+          type: string
+        password:
+          description: User password
+          type: string
+        firstName:
+          description: User first name
+          type: string
+        lastName:
+          description: User family name
+          type: string
+        qualificationCode:
+          $ref: '../schemas/qualification-code.yaml'
+        identifier:
+          description: Identifier of licence to practice when user is Practitioner
+          type: string
+      required:
+        - phoneNumber
+        - password
+        - email
+        - firstName
+        - lastName

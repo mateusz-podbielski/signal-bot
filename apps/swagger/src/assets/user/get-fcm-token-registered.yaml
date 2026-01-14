@@ -1,0 +1,17 @@
+get:
+  tags:
+    - user
+  security:
+    - xAuthToken: [ ]
+  summary: Checks does user has registered fcm token
+  responses:
+    200:
+      description: Info, does user has registered fcm token
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              registered:
+                type: boolean
+

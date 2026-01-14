@@ -1,0 +1,11 @@
+FROM node:14.16-alpine3.10
+ARG APP_PATH
+ARG APP_PORTS
+
+WORKDIR /app
+COPY package*.json /app/
+RUN cd /app && npm i
+COPY $APP_PATH /app
+
+CMD ["node", "./main.js"]
+EXPOSE $APP_PORTS

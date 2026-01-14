@@ -1,0 +1,24 @@
+type: object
+properties:
+  description:
+    type: string
+    description: The appointment description
+  patient:
+    type: string
+    description: The Mongo id of patient for who's appointment is
+  specialist:
+    type: string
+    description: The Mongo id of specialist involved in the appointment
+  start:
+    type: string
+    format: date-time
+    description: The start date-time of the appointment
+  end:
+    type: string
+    format: date-time
+    description: The end date-time of the appointment
+  priority:
+    type: integer
+    description: Appointment priority
+    minimum: 0
+    maximum: 2

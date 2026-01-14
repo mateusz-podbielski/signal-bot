@@ -1,0 +1,28 @@
+type: object
+properties:
+  resourceType:
+    type: string
+    enum:
+      - ServiceRequest
+  status:
+    $ref: 'service-request-status.yaml'
+  priority:
+    $ref: 'service-request-priority.yaml'
+  subject:
+    description: Reference of Patient who service request concerns
+    $ref: 'reference.yaml'
+  requester:
+    description: Reference of Person who request service
+    $ref: 'reference.yaml'
+  performer:
+    description: Reference of Person who should perform requested service
+    $ref: 'reference.yaml'
+  note:
+    description: The info text for service request
+    $ref: 'annotation.yaml'
+  code:
+    description: The code (type) of service request
+    $ref: 'codeable-concept.yaml'
+  occurrenceDateTime:
+    description: When service request should be performed
+    type: string

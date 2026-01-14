@@ -1,0 +1,27 @@
+export const conf = {
+  PORT: 3001,
+  HB_BT_PORT: 7000,
+  SWAGGER_PORT: 8001,
+  SALT_WORK_FACTOR: 10,
+  MAX_LOGIN_ATTEMPTS: 5,
+  LOCK_TIME: 2 * 60 * 60 * 1000,
+  SMS_API_URL: 'https://api.smsapi.pl',
+  BITLY_API_URL: 'https://api-ssl.bitly.com/v4',
+  BACKEND_FHIR_URL: 'http://localhost',
+  FROM_EMAIL: 'aplikacja@i-care.pl',
+  BACKEND_FHIR_PORT: '8091',
+  BACKEND_MONGO_HOST: 'localhost',
+  BACKEND_MONGO_PORT: '27018',
+  BACKEND_SOCKET_PORT: 5555,
+  BACKEND_UPLOAD_PATH: 'uploads',
+  MONGO_DB_NAME: 'signalbot',
+  INVITE_TOKEN_LIFETIME: '48h',
+  AUTH_TOKEN_LIFETIME: '1h',
+  REFRESH_TOKEN_LIFETIME: '6h',
+  BACKEND_TCP_IP:'127.0.0.1',
+  TCP_URLS: [
+    '127.0.0.1:6000/socket-io-node',
+    '127.0.0.1:6000/api-node',
+    '127.0.0.1:6000/auth-node'
+  ],
+};

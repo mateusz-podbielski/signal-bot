@@ -1,0 +1,26 @@
+post:
+  tags:
+    - auth
+  summary: Creates new user account
+  description: Creates new user account, with Person resource on Fhir
+  parameters:
+    - in: query
+      name: resourceType
+      schema:
+        $ref: '../schemas/care-team-participant-type.yaml'
+      required: true
+      description: Type of Fhir
+  requestBody:
+    $ref: 'auth-data.yaml'
+  responses:
+    '200':
+      description: Newly created user JWT
+      content:
+        application/json:
+          schema:
+            properties:
+              token:
+                type: string
+                description: JWT as string
+    '400':
+      description: Incorrect or missing sign-up data

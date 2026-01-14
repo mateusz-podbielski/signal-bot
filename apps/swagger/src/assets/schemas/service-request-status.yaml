@@ -1,0 +1,9 @@
+type: string
+enum:
+  - draft
+  - active
+  - onHold
+  - revoked
+  - completed
+  - enteredInError
+  - unknown

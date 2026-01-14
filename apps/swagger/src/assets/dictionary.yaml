@@ -1,0 +1,18 @@
+get:
+  tags:
+    - dictionary
+  parameters:
+    - in: path
+      name: resource
+      required: true
+      schema:
+        $ref: 'schemas/dictionary-type.yaml'
+  responses:
+    200:
+      description: Successful response for dictionary request
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: 'schemas/dictionary-item.yaml'

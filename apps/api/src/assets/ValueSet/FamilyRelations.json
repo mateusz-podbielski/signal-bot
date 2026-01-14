@@ -1,0 +1,54 @@
+{
+  "resourceType": "ValueSet",
+  "id": "FamilyRelations",
+  "name": "Stopnie Pokrewienstwa",
+  "status": "active",
+  "publisher": "SignalBot",
+  "version": 2,
+  "url": "/ValueSet/FamilyRelations",
+  "compose": {
+    "include": [
+      {
+        "system": "urn:oid:2.16.840.1.113883.6.97",
+        "concept": [
+          {
+            "code": "HUSB",
+            "display": "Mąż"
+          },
+          {
+            "code": "WIFE",
+            "display": "Żona"
+          },
+          {
+            "code": "SON",
+            "display": "Syn"
+          },
+          {
+            "code": "DAU",
+            "display": "Córka"
+          },
+          {
+            "code": "FTH",
+            "display": "Ojciec"
+          },
+          {
+            "code": "MTH",
+            "display": "Matka"
+          },
+          {
+            "code": "GRPRN",
+            "display": "Dziadek/Babka"
+          },
+          {
+            "code": "GGRPRN",
+            "display": "Pradziadek/Prabaka"
+          },
+          {
+            "code": "OTH",
+            "display": "Inna"
+          }
+        ]
+      }
+    ]
+  }
+}

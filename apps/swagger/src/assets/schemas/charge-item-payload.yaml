@@ -1,0 +1,53 @@
+type: object
+properties:
+  amount:
+    description: Charge item amount
+    type: number
+  currency:
+    description: The amount currency (ISO)
+    type: string
+    enum:
+      - PLN
+      - EUR
+      - CHF
+      - JPY
+      - USD
+  note:
+    description: The note for charge item
+    type: string
+  patient:
+    description: the Mongo ID of patient of charge item
+    type: string
+  type:
+    description: The charge item type
+    type: string
+    enum:
+      - MEDICINES
+      - SHOPPING
+      - DOCTOR_APP
+      - OFFICIAL
+      - OTHER
+  bill:
+    description: The charge item bill
+    type: array
+    items:
+      type: string
+      format: binary
+  occurrence:
+    description: The date when charge item has been performed
+    type: string
+  performer:
+    description: The Mongo ID of user performing the charge item
+    type: string
+  name:
+    description: The name of charge item
+    type: string
+required:
+  - name
+  - performer
+  - occurence
+  - type
+  - patient
+  - note
+  - currency
+  - amount

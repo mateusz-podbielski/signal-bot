@@ -1,0 +1,8 @@
+type: string
+enum:
+  - bill
+  - recipe
+  - medicalReport
+  - testResult
+  - other
+description: The type of composition

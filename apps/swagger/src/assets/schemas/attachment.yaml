@@ -1,0 +1,27 @@
+type: object
+properties:
+  contentType:
+    type: string
+    description: mime type of file
+  data:
+    description: base64 encoded file data
+    type: string
+  url:
+    description: url to get file
+    type: string
+  size:
+    description: file sizein bytes
+    type: number
+  hash:
+    type: string
+  title:
+    description: original file name
+    type: string
+  creation:
+    description: the ISO Date when created
+    type: string
+required:
+  - contentType
+  - size
+  - title
+  - creation

@@ -1,0 +1,15 @@
+get:
+  security:
+    - xAuthToken: [ ]
+  tags:
+    - bthub
+  summary: Returns all devices registered for patient
+  responses:
+    200:
+      description: The devices list
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../schemas/device.yaml'

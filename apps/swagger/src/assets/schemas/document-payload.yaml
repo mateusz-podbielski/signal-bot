@@ -1,0 +1,13 @@
+type: object
+properties:
+  documentType:
+    $ref: 'composition-document-type.yaml'
+  description:
+    type: string
+    description: Document description
+  patient:
+    type: string
+    description: The subject of this document
+  title:
+    type: string
+    description: The title of document

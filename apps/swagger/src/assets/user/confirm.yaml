@@ -1,0 +1,24 @@
+patch:
+  tags:
+    - user
+  summary: Check sms code sent durig registration proces
+  requestBody:
+    content:
+      application/json:
+        schema:
+          properties:
+            code:
+              type: string
+  security:
+    - xAuthToken: []
+  responses:
+    '204':
+      description: Success response
+    '401':
+      description: Authorization information is missing or invalid
+    '404':
+      description: Incorrect SMS confirmation code
+    '408':
+      description: Confirmation SMS Code expired
+    '500':
+      description: Unexpected error

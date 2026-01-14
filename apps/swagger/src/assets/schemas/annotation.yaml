@@ -1,0 +1,15 @@
+type: object
+properties:
+  authorReference:
+    description: Reference of autrhor of annotation
+    $ref: 'reference.yaml'
+  time:
+    type: string
+    description: time when annotation has been created
+  text:
+    description: The text of annotation
+    type: string
+required:
+  - authorReference
+  - time
+  - text

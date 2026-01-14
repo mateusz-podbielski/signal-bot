@@ -1,0 +1,6 @@
+type: string
+description: Method of feeding
+enum:
+  - oral
+  - probe
+  - peg

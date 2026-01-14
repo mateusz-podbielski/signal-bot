@@ -1,0 +1,301 @@
+openapi: 3.0.3
+info:
+  title: SignalBot API
+  description: SignalBot private API for frontend App
+  version: 1.15.0
+  contact:
+    name: Grzegorz Madajczak
+    email: madajczak@gmail.com
+servers:
+  - url: http://localhost:3000/api
+    description: development server
+paths:
+  /dictionary/{resource}:
+    $ref: 'dictionary.yaml'
+  /auth/sign-up:
+    $ref: 'auth/sign-up.yaml'
+  /auth/log-in:
+    $ref: 'auth/log-in.yaml'
+  /auth/{phoneNumber}/restore-password:
+    $ref: 'auth/restore-password.yaml'
+  /auth/{phoneNumber}/change-password:
+    $ref: 'auth/change-password.yaml'
+  /auth/{phoneNumber}/check:
+    $ref: 'auth/check-phone-number.yaml'
+  /auth/{phoneNumber}/confirm:
+    $ref: 'auth/confirm-phone-number.yaml'
+  /auth/{phoneNumber}/resend-code:
+    $ref: 'auth/resend-code.yaml'
+  /auth/check-password:
+    $ref: 'auth/check-password.yaml'
+  /auth2:
+    $ref: 'auth2/auth2.yaml'
+  /user:
+    $ref: 'user/get-user-data.yaml'
+  /user/avatar:
+    $ref: 'user/patch-avatar.yaml'
+  /user/{uid}/avatar:
+    $ref: 'user/get-avatar.yaml'
+  /user/password:
+    $ref: 'user/change-password.yaml'
+  /user/last-login:
+    $ref: 'user/last-login.yaml'
+  /user/confirm:
+    $ref: 'user/confirm.yaml'
+  /user/resend-code:
+    $ref: 'user/resend-code.yaml'
+  /related-person/child:
+    $ref: 'related-person/child.yaml'
+  /related-person/family-relation:
+    $ref: 'related-person/patch-family-relation.yaml'
+  /related-person/{propertyName}:
+    $ref: 'related-person/patch.yaml'
+  /user/invitations:
+    $ref: 'user/invitations.yaml'
+  /user/invitations/{invitationId}:
+    $ref: 'user/invitations-invitation-id.yaml'
+  /user/invitations/{invitationId}/accept:
+    $ref: 'user/invitation-accept.yaml'
+  /user/invitations/{invitationId}/reject:
+    $ref: 'user/invitation-reject.yaml'
+  /user/care-teams:
+    $ref: 'care-team/care-teams.yaml'
+  /user/care-teams/member/{resourceType}:
+    $ref: 'care-team/care-team-members.yaml'
+  /user/settings:
+    $ref: 'user-settings.yaml'
+  /patient/{propertyName}:
+    $ref: 'patient/patient.yaml'
+  /patient/{patientId}/last-login:
+    $ref: 'patient/last-login.yaml'
+  /patient/{patientId}/documents:
+    $ref: 'patient/get-patient-documents.yaml'
+  /practitioner/{propertyName}:
+    $ref: 'practitioner/patch-property.yaml'
+  /practitioner/practitioner-role:
+    $ref: 'practitioner/practitioner-role.yaml'
+  /practitioner/care-teams/members:
+    $ref: 'practitioner/care-teams-members.yaml'
+  /practitioner/{practitionerId}/practitioner-role:
+    $ref: 'practitioner/practitioner-role-by-id.yaml'
+  /care-team/patient/{patientId}:
+    $ref: 'care-team/care-team-patient.yaml'
+  /care-team/patient/{patientId}/members:
+    $ref: 'care-team/care-team-patient-members.yaml'
+  /twilio/token/{grantType}:
+    $ref: 'twilio/get-token.yaml'
+  /twilio/chat/channel:
+    $ref: 'twilio/channel-id.yaml'
+  /check/pesel/{value}:
+    $ref: 'check/check-pesel.yaml'
+  /service-request:
+    $ref: 'service-request/user-service-requests.yaml'
+  /service-request/{requestId}:
+    $ref: 'service-request/service-request-id.yaml'
+  /service-request/{requestId}/status:
+    $ref: 'service-request/service-request-status.yaml'
+  /charge-item:
+    $ref: 'charge-item/charge-item.yaml'
+  /charge-item/{chargeItemId}:
+    $ref: 'charge-item/charge-item-id.yaml'
+  /charge-item/{chargeItemId}/files:
+    $ref: 'charge-item/charge-item-patch-files.yaml'
+  /charge-item/{chargeItemId}/bill:
+    $ref: 'charge-item/charge-item-id-bill.yaml'
+  /charge-item/{chargeItemId}/status:
+    $ref: 'charge-item/charge-item-status.yaml'
+  /composition:
+    $ref: 'composition/composition.yaml'
+  /composition/{compositionId}/meta:
+    $ref: 'composition/composition-id-meta.yaml'
+  /composition/{compositionId}/share:
+    $ref: 'composition/composition-id-share.yaml'
+  /composition/document/{docRefId}:
+    $ref: 'composition/document-doc-ref-id.yaml'
+  /document-reference/{docRefId}/attachment:
+    $ref: 'document-reference/doc-ref-id-attachment.yaml'
+  /document-reference/{docRefId}/share:
+    $ref: 'document-reference/doc-ref-id-share.yaml'
+  /fcm:
+    $ref: 'fcm/register-token.yaml'
+  /fcm/{tokenId}:
+    $ref: 'fcm/fcm-token-id.yaml'
+  /app-messages:
+    $ref: 'app-messages/app-messages.yaml'
+  /app-messages/count:
+    $ref: 'app-messages/app-messages-count.yaml'
+  /app-messages/{messageId}:
+    $ref: 'app-messages/app-message-id.yaml'
+  /schedule:
+    $ref: 'schedule/schedule.yaml'
+  /schedule/{scheduleId}:
+    $ref: 'schedule/schedule-schedule-id.yaml'
+  /observation/{observationType}:
+    $ref: 'observation/observation-type.yaml'
+  /observation/patient/{patientId}:
+    $ref: 'observation/observation-patient.yaml'
+  /observation/patient/{patientId}/{observationType}:
+    $ref: 'observation/observation-patient-observation-type.yaml'
+  /observation/patient/{patientId}/last:
+    $ref: 'observation/observation-patient-last.yaml'
+  /observation/patient/{patientId}/bmi:
+    $ref: 'observation/get-bmi.yaml'
+  /observation/patient/{patientId}/report:
+    $ref: 'observation/report.yaml'
+  /observation/BloodType:
+    $ref: 'observation/update-blood-type.yaml'
+  /appointment:
+    $ref: 'appointment/appointment.yaml'
+  /appointment/{appointmentId}:
+    $ref: 'appointment/appointment-appointment-id.yaml'
+  /appointment/{appointmentId}/status:
+    $ref: 'appointment/appointment-appointment-id-status.yaml'
+  /appointment/{appointmentId}/participant:
+    $ref: 'appointment/appointment-appointment-id-participant.yaml'
+  /bthub/register:
+    $ref: 'bthub/register.yaml'
+  /bthub:
+    $ref: 'bthub/get.yaml'
+  /bthub/{serialNumber}:
+    $ref: 'bthub/get-serial-number.yaml'
+components:
+  schemas:
+    Address:
+      $ref: 'schemas/address.yaml'
+    AddressType:
+      $ref: 'schemas/address-type.yaml'
+    AddressUse:
+      $ref: 'schemas/address-use.yaml'
+    Annotation:
+      $ref: 'schemas/annotation.yaml'
+    AppMessage:
+      $ref: 'schemas/app-message.yaml'
+    AppMessageActionType:
+      $ref: 'schemas/app-message-action-type.yaml'
+    Appointment:
+      $ref: 'schemas/appointment.yaml'
+    AppointmentParticipant:
+      $ref: 'schemas/appointment-participant.yaml'
+    AppointmentParticipantStatus:
+      $ref: 'schemas/appointment-participant-status.yaml'
+    AppointmentParticipantRequired:
+      $ref: 'schemas/appointment-participant-required.yaml'
+    AppointmentStatus:
+      $ref: 'schemas/appointment-status.yaml'
+    AppointmentPayload:
+      $ref: 'schemas/appointment-payload.yaml'
+    Attachment:
+      $ref: 'schemas/attachment.yaml'
+    BloodType:
+      $ref: 'schemas/blood-type.yaml'
+    BloodTypePayload:
+      $ref: 'schemas/blood-type-payload.yaml'
+    RhesusFactor:
+      $ref: 'schemas/rhesus-factor.yaml'
+    CareTeam:
+      $ref: 'schemas/care-team.yaml'
+    CareTeamParticipant:
+      $ref: 'schemas/care-team-participant.yaml'
+    CareTeamParticipantType:
+      $ref: 'schemas/care-team-participant-type.yaml'
+    ChargeItem:
+      $ref: 'schemas/charge-item.yaml'
+    ChargeItemStatus:
+      $ref: 'schemas/charge-item-status.yaml'
+    ChargeItemStatusType:
+      $ref: 'schemas/charge-item-status-type.yaml'
+    CodeableConcept:
+      $ref: 'schemas/codeable-concept.yaml'
+    CodeableConceptCode:
+      $ref: 'schemas/codeable-concept-code.yaml'
+    ContactPoint:
+      $ref: 'schemas/contact-point.yaml'
+    ContactPointSystem:
+      $ref: 'schemas/contact-point-system.yaml'
+    ContactPointUse:
+      $ref: 'schemas/contact-point-use.yaml'
+    Device:
+      $ref: 'schemas/device.yaml'
+    DeviceStatus:
+      $ref: 'schemas/device-status.yaml'
+    DictionaryItem:
+      $ref: 'schemas/dictionary-item.yaml'
+    DictionaryType:
+      $ref: 'schemas/dictionary-type.yaml'
+    DocumentReference:
+      $ref: 'schemas/document-reference.yaml'
+    Feeding:
+      $ref: 'schemas/feeding.yaml'
+    FeedingMethod:
+      $ref: 'schemas/feeding-method.yaml'
+    FeedingType:
+      $ref: 'schemas/feeding-type.yaml'
+    Gender:
+      $ref: 'schemas/gender.yaml'
+    HumanName:
+      $ref: 'schemas/human-name.yaml'
+    NameUse:
+      $ref: 'schemas/name-use.yaml'
+    Reference:
+      $ref: 'schemas/reference.yaml'
+    CustomError:
+      $ref: 'schemas/custom-error.yaml'
+    RelatedPerson:
+      $ref: 'schemas/related-person.yaml'
+    FamilyRelation:
+      $ref: 'schemas/family-relation.yaml'
+    Patient:
+      $ref: 'schemas/patient.yaml'
+    Practitioner:
+      $ref: 'schemas/practitioner.yaml'
+    PractitionerRoleCode:
+      $ref: 'schemas/practitioner-role-code.yaml'
+    SpecialityCode:
+      $ref: 'schemas/specialty-code.yaml'
+    Telcom:
+      $ref: 'schemas/telcom.yaml'
+    TelcomSystem:
+      $ref: 'schemas/telcom-system.yaml'
+    UserSettings:
+      $ref: 'schemas/user-settings.yaml'
+    CompositionResponse:
+      $ref: 'schemas/composition-response.yaml'
+    CompositionDocumentType:
+      $ref: 'schemas/composition-document-type.yaml'
+    ServiceRequest:
+      $ref: 'schemas/service-request.yaml'
+    ServiceRequestPayload:
+      $ref: 'schemas/service-request-payload.yaml'
+    ServiceRequestStatus:
+      $ref: 'schemas/service-request-status.yaml'
+    ServiceRequestPriority:
+      $ref: 'schemas/service-request-priority.yaml'
+    Schedule:
+      $ref: 'schemas/schedule.yaml'
+    SchedulePayload:
+      $ref: 'schemas/schedule-payload.yaml'
+    PlanningHorizon:
+      $ref: 'schemas/period.yaml'
+    TwilioTokenType:
+      $ref: 'schemas/twilio-token-type.yaml'
+    Observation:
+      $ref: 'schemas/observation.yaml'
+    ObservationType:
+      $ref: 'schemas/observation-type.yaml'
+    ObservationMethod:
+      $ref: 'schemas/observation-method.yaml'
+    ObservationPayload:
+      $ref: 'schemas/observation-payload.yaml'
+    QualificationCode:
+      $ref: 'schemas/qualification-code.yaml'
+    Quantity:
+      $ref: 'schemas/quantity.yaml'
+    Meta:
+      $ref: 'schemas/resource-meta.yaml'
+    ResourceExtension:
+      $ref: 'schemas/resource-extension.yaml'
+  securitySchemes:
+    xAuthToken:
+      type: apiKey
+      in: header
+      name: x-auth-token

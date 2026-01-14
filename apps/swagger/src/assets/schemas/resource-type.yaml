@@ -1,0 +1,11 @@
+type: string
+enum:
+  - Patient
+  - RelatedPerson
+  - Practitioner
+  - PractitionerRole
+  - Location
+  - CareTeam
+  - Person
+  - Bundle
+  - ServiceRequest

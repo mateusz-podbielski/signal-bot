@@ -1,0 +1,23 @@
+type: object
+properties:
+  patientId:
+    description: Mongo id of Patient who service request concerns
+    type: string
+  performerId:
+    description: Mongo id of service request performer
+    type: string
+  noteText:
+    description: Service request note
+    type: string
+  occurrenceDateTime:
+    description: When service request should be performed. The accepted format is YYY, YYYY-MM, YYYY-MM-DD or YYYY-MM-DDThh:mm:ss+zz:zz, e.g. 2018, 1973-06, 1905-08-23, 2015-02-07T13:28:17-05:00 or 2017-01-01T00:00:00.000Z
+    type: string
+  code:
+    description: The type of service request
+    type: string
+    enum:
+      - SHOPPING
+      - MEDICINES
+      - DOCTOR_APP
+      - TRANSPORT
+      - OTHER

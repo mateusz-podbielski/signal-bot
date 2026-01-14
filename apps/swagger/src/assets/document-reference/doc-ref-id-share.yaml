@@ -1,0 +1,28 @@
+post:
+  tags:
+    - document-reference
+  security:
+    - xAuthToken: [ ]
+  summary: Shares the documents from document reference
+  parameters:
+    - in: path
+      required: true
+      name: docRefId
+      description: DocumentReference resource id
+      schema:
+        type: string
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            email:
+              type: string
+  responses:
+    204:
+      description: Files has been send
+    404:
+      description: Document Reference or file not found
+    500:
+      description: Unexpected error

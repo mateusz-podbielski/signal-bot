@@ -1,0 +1,33 @@
+type: object
+properties:
+  id:
+    type: string
+  status:
+    type: string
+    enum:
+      - current
+      - superseded
+      - enteredInError
+  docStatus:
+    type: string
+    enum:
+      - preliminary
+      - final
+      - amended
+      - enteredInError
+  subject:
+    $ref: 'reference.yaml'
+  author:
+    type: array
+    items:
+      $ref: 'reference.yaml'
+  content:
+    type: array
+    items:
+      $ref: 'document-content.yaml'
+  date:
+    type: string
+  type:
+    $ref: 'codeable-concept.yaml'
+  description:
+    type: string

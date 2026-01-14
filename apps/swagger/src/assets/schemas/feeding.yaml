@@ -1,0 +1,11 @@
+type: object
+properties:
+  method:
+    $ref: 'feeding-method.yaml'
+  type:
+    $ref: 'feeding-type.yaml'
+  value:
+    type: number
+required:
+  - type
+  - method

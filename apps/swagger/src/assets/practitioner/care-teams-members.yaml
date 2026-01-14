@@ -1,0 +1,20 @@
+get:
+  tags:
+    - practitioner
+  security:
+    - xAuthToken: [ ]
+  summary: Get care teams' members
+  description: Get care teams members, where the practitioner is the participant
+  responses:
+    200:
+      description: User data
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              anyOf:
+                - $ref: '../schemas/care-team.yaml'
+                - $ref: '../schemas/related-person.yaml'
+                - $ref: '../schemas/practitioner.yaml'
+                - $ref: '../schemas/patient.yaml'

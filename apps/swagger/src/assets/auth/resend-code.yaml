@@ -1,0 +1,18 @@
+get:
+  tags:
+    - auth
+  summary: Resends authentication code for user
+  parameters:
+    - in: path
+      name: phoneNumber
+      required: true
+      schema:
+        type: string
+        example: +48500600700
+  responses:
+    204:
+      description: Authentication code has been sent successfuly
+    400:
+      description: Provided phone number not in database
+    405:
+      description: Maximum number of codes sent this day reached

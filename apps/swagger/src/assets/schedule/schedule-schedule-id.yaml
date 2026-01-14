@@ -1,0 +1,89 @@
+get:
+  summary: Get single schedule
+  tags:
+    - schedule
+  security:
+    - xAuthToken: [ ]
+  parameters:
+    - in: path
+      required: true
+      name: scheduleId
+      schema:
+        type: string
+      description: Schedule ID
+  responses:
+    200:
+      description: The schedule
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/schedule.yaml'
+put:
+  summary: Updates the schedule
+  tags:
+    - schedule
+  security:
+    - xAuthToken: [ ]
+  parameters:
+    - in: path
+      required: true
+      name: scheduleId
+      schema:
+        type: string
+      description: Schedule ID
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: '../schemas/schedule-payload.yaml'
+  responses:
+    200:
+      description: Updated schedule
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/schedule.yaml'
+patch:
+  summary: Changes the schedule's active property
+  tags:
+    - schedule
+  security:
+    - xAuthToken: [ ]
+  parameters:
+    - in: path
+      required: true
+      name: scheduleId
+      schema:
+        type: string
+      description: Schedule ID
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            active:
+              type: boolean
+  responses:
+    200:
+      description: Updated schedule
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/schedule.yaml'
+delete:
+  summary: Removes the schedule
+  tags:
+    - schedule
+  security:
+    - xAuthToken: [ ]
+  parameters:
+    - in: path
+      required: true
+      name: scheduleId
+      schema:
+        type: string
+      description: Schedule ID
+  responses:
+    204:
+      description: The schedule has been deleted

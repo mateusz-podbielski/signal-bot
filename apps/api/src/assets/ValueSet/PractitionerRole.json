@@ -1,0 +1,37 @@
+{
+  "resourceType": "ValueSet",
+  "id": "PractitionerRole",
+  "name": "Rola Pracownika Medycznego",
+  "status": "active",
+  "publisher": "SignalBot",
+  "version": 2,
+  "url": "/ValueSet/PractitionerRole",
+  "compose": {
+    "include": [
+      {
+        "concept": [
+          {
+            "code": "PHY",
+            "display": "Lekarz"
+          },
+          {
+            "code": "NRS",
+            "display": "Pielęgniarka"
+          },
+          {
+            "code": "THE",
+            "display": "Fizjoterapeuta"
+          },
+          {
+            "code":"PSY",
+            "display": "Psycholog"
+          },
+          {
+            "code": "OTH",
+            "display": "Inny"
+          }
+        ]
+      }
+    ]
+  }
+}

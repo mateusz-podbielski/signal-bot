@@ -1,0 +1,48 @@
+get:
+  tags:
+    - fcm
+  security:
+    - xAuthToken: [ ]
+  summary: Checks FCM token for user
+  parameters:
+    - in: path
+      name: tokenId
+      required: true
+      description: Type of token
+      schema:
+        type: string
+  responses:
+    200:
+      description: FCM Token when has been registered
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              token:
+                description: FCM token
+                type: string
+    404:
+      description: Token has not been registered
+    500:
+      description: Undefined error
+delete:
+  tags:
+    - fcm
+  security:
+    - xAuthToken: [ ]
+  summary: Removes FCM User token
+  parameters:
+    - in: path
+      name: tokenId
+      required: true
+      description: Type of token
+      schema:
+        type: string
+  responses:
+    204:
+      description: FCM Token has been deleted
+    404:
+      description: Token has not been registered
+    500:
+      description: Undefined error

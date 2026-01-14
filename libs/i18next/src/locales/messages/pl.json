@@ -1,0 +1,5 @@
+{
+  "inviteSMS": "Użytkownik {{firstName}} {{lastName}} wysłał ci zaproszenie do aplikacji SignalBot. {{link}}",
+  "inviteAppMessage": "Użytkownik {{firstName}} {{lastName}} wysłał ci zaproszenie do aplikacji SignalBot.",
+  "inviteRejectAppMessage": "Użytkownik {{firstName}} {{lastName}} odrzucił do aplikacji SignalBot."
+}

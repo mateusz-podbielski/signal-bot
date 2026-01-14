@@ -1,0 +1,7 @@
+type: string
+enum:
+  - accepted
+  - declined
+  - tentative
+  - needsAction
+description: The status of appointment accepttion

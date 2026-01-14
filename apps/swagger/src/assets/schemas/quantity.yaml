@@ -1,0 +1,13 @@
+type: object
+properties:
+  value:
+    type: number
+  unit:
+    type: string
+  comparator:
+    type: string
+  code:
+    type: string
+required:
+  - value
+  - unit

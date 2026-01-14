@@ -1,0 +1,42 @@
+type: object
+properties:
+  resourceType:
+    type: string
+    enum:
+      - ChargeItem
+  id:
+    type: string
+  status:
+    $ref: 'charge-item-status.yaml'
+  code:
+    $ref: 'codeable-concept.yaml'
+  note:
+    type: array
+    items:
+      $ref: 'annotation.yaml'
+  subject:
+    $ref: 'reference.yaml'
+  occurrence:
+    type: string
+  performer:
+    type: object
+    properties:
+      actor:
+        $ref: 'reference.yaml'
+  priceOverride:
+    $ref: 'money.yaml'
+  supportingInformation:
+    type: array
+    items:
+      $ref: 'reference.yaml'
+required:
+  - resourceType
+  - id
+  - status
+  - code
+  - note
+  - subject
+  - occurence
+  - performer
+  - priceOverride
+  - supportingInformation

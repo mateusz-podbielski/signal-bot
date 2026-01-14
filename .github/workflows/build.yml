@@ -1,0 +1,46 @@
+name: Build, Ship and Deploy
+on:
+  push:
+    branches:
+      - master
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          sudo chmod 600 ~/.ssh/id_rsa
+        shell: bash
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
+
+      - name: Clean up build repo
+        run: |
+          ssh root@46.41.140.61 "rm -rf ${GITHUB_REPOSITORY##*/}"
+          ssh root@46.41.140.61 "mkdir ${GITHUB_REPOSITORY##*/}"
+
+      - name: Copy on server
+        run: |
+          rsync -a ${GITHUB_WORKSPACE}/ root@46.41.140.61:~/${GITHUB_REPOSITORY##*/}
+
+      - name: Build docker image(s)
+        run: |
+          ssh root@46.41.140.61 "cd ${GITHUB_REPOSITORY##*/} && chmod +x docker-*.sh && ./docker-build.sh"
+
+      - name: Deploy application(s)
+        run: |
+          ssh root@46.41.140.61 "cd ~/signalbot-system && docker-compose up -d"
+

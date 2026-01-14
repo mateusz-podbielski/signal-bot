@@ -1,0 +1,15 @@
+type: object
+properties:
+  system:
+    type: string
+  version:
+    type: string
+  code:
+    type: string
+  display:
+    type: string
+  userSelected:
+    type: string
+required:
+  - system
+  - code

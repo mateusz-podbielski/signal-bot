@@ -1,0 +1,25 @@
+{
+  "resourceType": "ValueSet",
+  "id": "ObservationMethod",
+  "name": "Interpretacja obserwacji (pomiaru)",
+  "status": "active",
+  "publisher": "SignalBot",
+  "version": 2,
+  "url": "/ValueSet/ObservationMethod",
+  "compose": {
+    "include": [
+      {
+        "concept": [
+          {
+            "code": "MAN",
+            "display": "Samodzielny wpis"
+          },
+          {
+            "code": "EQU",
+            "display": "Urządzenie pomiarowe"
+          }
+        ]
+      }
+    ]
+  }
+}

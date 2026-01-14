@@ -1,0 +1,26 @@
+type: object
+properties:
+  _id:
+    type: string
+    description: AppMessage Mongo Id
+  message:
+    type: string
+    description: Message content
+  from:
+    type: string
+    description: Sender's Mongo Id
+  to:
+    type: string
+    description: Recipient's Mongo Id
+  createdAt:
+    type: string
+    format: date-time
+    description: WHen app message  has been created
+  action:
+    type: object
+    properties:
+      actionType:
+        $ref: 'app-message-action-type.yaml'
+      url:
+        type: string
+        description: Internal path or external url

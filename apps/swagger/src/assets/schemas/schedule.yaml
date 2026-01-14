@@ -1,0 +1,25 @@
+type: object
+properties:
+  meta:
+    $ref: 'resource-meta.yaml'
+  id:
+    type: string
+    description: Resource identifier
+  active:
+    type: boolean
+    description: Schedule is active or not
+  actor:
+    type: array
+    items:
+      $ref: 'reference.yaml'
+    description: One item array of actors for schedule. Only creator.
+  planningHorizon:
+      $ref: 'period.yaml'
+      description: Period of time covered by schedule
+  comment:
+    type: string
+    description: Comment
+  extension:
+    type: array
+    items:
+      $ref: 'schedule-extension.yaml'

@@ -1,0 +1,11 @@
+get:
+  security:
+    - xAuthToken: []
+  tags:
+    - user
+  summary: Resends authentication code for user
+  responses:
+    204:
+      description: Authentication code has been sent successfuly
+    405:
+      description: Maximum number of codes sent this day reached

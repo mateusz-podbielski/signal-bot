@@ -1,0 +1,42 @@
+{
+  "resourceType": "ValueSet",
+  "id": "DocumentType",
+  "system": "/ValueSet/DocumentType",
+  "version": 2,
+  "name": "Typ Dokumentu",
+  "status": "active",
+  "publisher": "SignalBot",
+  "url": "/ValueSet/DocumentType",
+  "compose": {
+    "include": [
+      {
+        "concept": [
+          {
+            "code": "bill",
+            "display": "Rachunek"
+          },
+          {
+            "code": "recipe",
+            "display": "Recepta"
+          },
+          {
+            "code": "medicalReport",
+            "display": "Raport z wizyty lekarskiej"
+          },
+          {
+            "code": "testResult",
+            "display": "Wynik badania"
+          },
+          {
+            "code": "otherMedical",
+            "display": "Inny dokument medyczny"
+          },
+          {
+            "code": "other",
+            "display": "Inne"
+          }
+        ]
+      }
+    ]
+  }
+}

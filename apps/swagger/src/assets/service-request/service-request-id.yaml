@@ -1,0 +1,53 @@
+get:
+  tags:
+    - service-request
+  security:
+    - xAuthToken: [ ]
+  parameters:
+    - in: path
+      name: requestId
+      required: true
+      description: Service request id, which will be updated
+      schema:
+        type: string
+  responses:
+    200:
+      description: The updated service requests
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/service-request.yaml'
+    401:
+      description: User is not authorized
+    403:
+      description: This resource is available only for resourceType RelatedPerson
+put:
+  tags:
+    - service-request
+  security:
+    - xAuthToken: [ ]
+  parameters:
+    - in: path
+      name: requestId
+      required: true
+      description: Service request id which will be updated
+      schema:
+        type: string
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: array
+          items:
+            $ref: '../schemas/service-request-payload.yaml'
+  responses:
+    200:
+      description: Updated service request
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/service-request.yaml'
+    401:
+      description: User is not authorized
+    403:
+      description: This resource is available only for resourceType RelatedPerson

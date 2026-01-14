@@ -1,0 +1,10 @@
+type: object
+properties:
+  use:
+    $ref: 'name-use.yaml'
+  family:
+    type: string
+  given:
+    type: array
+    items:
+      type: string

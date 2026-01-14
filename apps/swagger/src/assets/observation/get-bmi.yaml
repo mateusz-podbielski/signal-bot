@@ -1,0 +1,29 @@
+get:
+  security:
+    - xAuthToken: [ ]
+  tags:
+    - observation
+  summary: Returns BMI for given patient
+  parameters:
+    - in: path
+      required: true
+      name: patientId
+      description: The Mongo ID of patient
+      schema:
+        type: string
+  responses:
+    200:
+      description: The BMI calculated for single patient
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              bmi:
+                type: number
+                description: BMI value
+              interpretation:
+                description: BMI interpretation
+                $ref: '../schemas/codeable-concept.yaml'
+    400:
+      description: Some data missing to calculate the BMI - body weight or body height

@@ -1,0 +1,69 @@
+post:
+  summary: Create invitation
+  description: Sends request to invite new user to application. It could be other related person, practitioner or patient. Invitation will be send on given phone number.
+  security:
+    - xAuthToken: [ ]
+  tags:
+    - user
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            phoneNumber:
+              description: The phone number to send invitation
+              type: string
+            resourceType:
+              $ref: '../schemas/care-team-participant-type.yaml'
+            careTeamId:
+              type: string
+              description: CareTeam id (of Fhir resource), where invited member will be appended
+          required:
+            - phoneNumber
+            - resourceType
+            - careTeamId
+  responses:
+    200:
+      description: Invitation has been sent successfully
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../schemas/invitation.yaml'
+    405:
+      description: User sends invitation to him self, what is not allowed
+    409:
+      description: User sends invitation to existing user with resourceType conflict
+    418:
+      description: User sends invitation for member from hist care-team
+get:
+  summary: User's invitations
+  description: Returns user's created invitation together with received invitations
+  security:
+    - xAuthToken: []
+  tags:
+    - user
+  responses:
+    200:
+      description: Invitations for user
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                uid:
+                  type: string
+                phoneNumber:
+                  type: string
+                resourceType:
+                  $ref: '../schemas/care-team-participant-type.yaml'
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                createdAt:
+                  type: string

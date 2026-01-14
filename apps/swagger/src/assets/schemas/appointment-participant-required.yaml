@@ -1,0 +1,6 @@
+type: string
+enum:
+  - required
+  - optional
+  - information-only
+description: Info about requirement of participant

@@ -1,0 +1,20 @@
+type: object
+properties:
+  id:
+    type: string
+  resourceType:
+    type: string
+  name:
+    type: string
+  careTeamStatus:
+    type: string
+    enum:
+      - proposed
+      - active
+      - suspended
+      - inactive
+      - enteredInError
+  participant:
+    type: array
+    items:
+      $ref: './care-team-participant.yaml'

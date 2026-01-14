@@ -1,0 +1,31 @@
+patch:
+  summary: Changes the charge item status
+  tags:
+    - charge-item
+  security:
+    - xAuthToken: [ ]
+  parameters:
+    - in: path
+      name: chargeItemId
+      schema:
+        type: string
+      required: true
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              $ref: '../schemas/charge-item-status-type.yaml'
+  responses:
+    200:
+      description: Newly created charge item
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/charge-item.yaml'
+    400:
+      description: Incorrect or missing status value
+    500:
+      description: Unexpected error

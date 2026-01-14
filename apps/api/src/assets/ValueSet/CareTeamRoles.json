@@ -1,0 +1,50 @@
+{
+  "resourceType": "ValueSet",
+  "id": "CareTeamRoles",
+  "system": "/ValueSet/CareTeamRoles",
+  "version": 2,
+  "name": "Rola Członka Grupy Opiekuńczej",
+  "status": "active",
+  "publisher": "SignalBot",
+  "url": "/ValueSet/CareTeamRoles",
+  "compose": {
+    "include": [
+      {
+        "concept": [
+          {
+            "code": "PRIM_PHYS",
+            "display": "Lekarz prowadzący"
+          },
+          {
+            "code": "PHYS",
+            "display": "Lekarz"
+          },
+          {
+            "code": "NURSE",
+            "display": "Pielęgniarka"
+          },
+          {
+            "code": "THERAP",
+            "display": "Terapeuta"
+          },
+          {
+            "code": "PSY",
+            "display": "Psycholog"
+          },
+          {
+            "code": "PATIENT",
+            "display": "Pacjent"
+          },
+          {
+            "code": "RELATED",
+            "display": "Opiekun"
+          },
+          {
+            "code": "OTHER",
+            "display": "Inny"
+          }
+        ]
+      }
+    ]
+  }
+}

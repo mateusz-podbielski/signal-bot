@@ -1,0 +1,42 @@
+post:
+  security:
+    - xAuthToken: [ ]
+  tags:
+    - observation
+  summary: Creates the new observation resource
+  parameters:
+    - in: path
+      required: true
+      name: observationType
+      description: The observation type
+      schema:
+        $ref: '../schemas/observation-type.yaml'
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: '../schemas/observation-payload.yaml'
+  responses:
+    200:
+      description: Succesfully created observation resource
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/observation.yaml'
+get:
+  security:
+    - xAuthToken: [ ]
+  tags:
+    - observation
+  summary: Returns observations of given type
+  parameters:
+    $ref: 'parameters.yaml'
+  responses:
+    200:
+      description: The observations created by user for all patients for given type
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../schemas/observation.yaml'

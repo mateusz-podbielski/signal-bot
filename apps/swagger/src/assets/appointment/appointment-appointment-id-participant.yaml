@@ -1,0 +1,66 @@
+patch:
+  security:
+    - xAuthToken: [ ]
+  tags:
+    - appointment
+  summary: Appends new participant to appointment
+  parameters:
+    - in: path
+      required: true
+      name: appointmentId
+      description: The fhir id of appointment to be changed
+      schema:
+        type: string
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            participant:
+              type: string
+              description: The Mongo Id of participant to be added to appointment
+  responses:
+    200:
+      description: Updated appointment resource
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/appointment.yaml'
+    400:
+      description: Incorrect form data
+    405:
+      description: Method not allowed. Only appointment participant can update the appointment.
+delete:
+  security:
+    - xAuthToken: [ ]
+  tags:
+    - appointment
+  summary: Removes participant to appointment
+  parameters:
+    - in: path
+      required: true
+      name: appointmentId
+      description: The fhir id of appointment to be changed
+      schema:
+        type: string
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            participant:
+              type: string
+              description: The Mongo Id of participant to be removed from appointment
+  responses:
+    200:
+      description: Updated appointment resource
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/appointment.yaml'
+    400:
+      description: Incorrect form data
+    405:
+      description: Method not allowed. Only appointment participant can update the appointment.

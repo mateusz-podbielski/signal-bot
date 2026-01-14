@@ -1,0 +1,8 @@
+type: object
+properties:
+  system:
+    $ref: 'telcom-system.yaml'
+  value:
+    type: string
+  use:
+    type: string

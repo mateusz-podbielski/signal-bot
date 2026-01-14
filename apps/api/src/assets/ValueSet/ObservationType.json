@@ -1,0 +1,65 @@
+{
+  "resourceType": "ValueSet",
+  "id": "ObservationType",
+  "name": "Typ obserwacji",
+  "status": "active",
+  "publisher": "SignalBot",
+  "version": 4,
+  "url": "/ValueSet/ObservationType",
+  "compose": {
+    "include": [
+      {
+        "concept": [
+          {
+            "code": "BodyWeight",
+            "display": "Masa ciała"
+          },
+          {
+            "code": "BodyHeight",
+            "display": "Wzrost"
+          },
+          {
+            "code": "HeartRate",
+            "display": "Tętno"
+          },
+          {
+            "code": "BodyTemp",
+            "display": "Temperatura ciała"
+          },
+          {
+            "code": "BloodPressure",
+            "display": "Ciśnienie krwi"
+          },
+          {
+            "code": "GlucoseLevel",
+            "display": "Glikemia"
+          },
+          {
+            "code": "Pain",
+            "display": "Poziom bólu"
+          },
+          {
+            "code": "Activity",
+            "display": "Aktywność"
+          },
+          {
+            "code": "Mood",
+            "display": "Nastrój"
+          },
+          {
+            "code": "Feeding",
+            "display": "Żywienie"
+          },
+          {
+            "code": "BloodType",
+            "display": "Grupa krwi"
+          },
+          {
+            "code": "Saturation",
+            "display": "Natlenowanie krwi"
+          }
+        ]
+      }
+    ]
+  }
+}

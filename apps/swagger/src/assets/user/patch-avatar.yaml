@@ -1,0 +1,20 @@
+patch:
+  tags:
+    - user
+  security:
+    - xAuthToken: [ ]
+  summary: Patches user resource with avatar data
+  requestBody:
+    content:
+      multipart/form-data:
+        schema:
+          type: object
+          properties:
+            avatar:
+              type: string
+              format: binary
+  responses:
+    200:
+      description: Updated User profile
+    500:
+      description: Unexpected errors

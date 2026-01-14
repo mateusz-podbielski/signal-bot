@@ -1,0 +1,96 @@
+image: node:14.16-alpine3.10
+pipelines:
+  branches:
+    develop:
+      - parallel:
+          - step:
+              name: Build Docker image - API
+              script:
+                - npm install
+                - npx nx build api
+                - VERSION=$(npm run version --silent)
+                - docker build -t signalbot-backend-api:$VERSION --build-arg APP_PATH="dist/apps/api" --build-arg APP_PORTS="3000 3133" -f Dockerfile.bitbucket .
+                - docker tag signalbot-backend-api:$VERSION $DOCKER_HUB_SERVER/backend-api:$VERSION
+                - echo $DOCKER_HUB_TOKEN | docker login --username $DOCKER_HUB_USER --password-stdin
+                - docker push $DOCKER_HUB_SERVER/backend-api:$VERSION
+              services:
+                - docker
+          - step:
+              name: Build Docker image - Socket IO
+              script:
+                - npm install
+                - npx nx build socket-io
+                - VERSION=$(npm run version --silent)
+                - docker build -t signalbot-backend-socket-io:$VERSION --build-arg APP_PATH="dist/apps/socket-io" --build-arg APP_PORTS="5555 5556" -f Dockerfile.bitbucket .
+                - docker tag signalbot-backend-socket-io:$VERSION $DOCKER_HUB_SERVER/backend-socket-io:$VERSION
+                - echo $DOCKER_HUB_TOKEN | docker login --username $DOCKER_HUB_USER --password-stdin
+                - docker push $DOCKER_HUB_SERVER/backend-socket-io:$VERSION
+              services:
+                - docker
+          - step:
+              name: Build Docker image - Auth
+              script:
+                - npm install
+                - npx nx build auth
+                - VERSION=$(npm run version --silent)
+                - docker build -t signalbot-backend-auth:$VERSION --build-arg APP_PATH="dist/apps/auth" --build-arg APP_PORTS="9003 9003" -f Dockerfile.bitbucket .
+                - docker tag signalbot-backend-auth:$VERSION $DOCKER_HUB_SERVER/backend-auth:$VERSION
+                - echo $DOCKER_HUB_TOKEN | docker login --username $DOCKER_HUB_USER --password-stdin
+                - docker push $DOCKER_HUB_SERVER/backend-auth:$VERSION
+              services:
+                - docker
+          - step:
+              name: Build Docker image - BTHUB
+              script:
+                - npm install
+                - npx nx build bthub
+                - VERSION=$(npm run version --silent)
+                - docker build -t signalbot-backend-bthub:$VERSION --build-arg APP_PATH="dist/apps/bthub" --build-arg APP_PORTS="7000 7000" -f Dockerfile.bitbucket .
+                - docker tag signalbot-backend-bthub:$VERSION $DOCKER_HUB_SERVER/backend-bthub:$VERSION
+                - echo $DOCKER_HUB_TOKEN | docker login --username $DOCKER_HUB_USER --password-stdin
+                - docker push $DOCKER_HUB_SERVER/backend-bthub:$VERSION
+              services:
+                - docker
+  custom:
+    api:
+      - variables:
+          - name: version
+      - step:
+          name: Deploy Docker image - API
+          image: lgatica/openssh-client
+          script:
+            - echo $version
+            - mkdir -p ~/.ssh/
+            - echo "${SSH_KNOWN_HOSTS}" > ~/.ssh/known_hosts
+            - echo "${SSH_PRIVATE_KEY}" | base64 -d > ~/.ssh/id_rsa
+            - chmod 600 ~/.ssh/id_rsa
+            - ssh ${SSH_USER}@${SSH_HOST} "sed -i \"s%signalbot/backend-api:.*$%signalbot/backend-api:$version%\" signalbot-system/docker-compose.yml"
+            - ssh ${SSH_USER}@${SSH_HOST} "cd ~/signalbot-system && docker-compose pull signalbot-backend-api"
+            - ssh ${SSH_USER}@${SSH_HOST} "cd ~/signalbot-system && docker-compose up -d signalbot-backend-api"
+    socket-io:
+      - variables:
+          - name: version
+      - step:
+          name: Deploy Docker image - Socket IO
+          image: lgatica/openssh-client
+          script:
+            - echo $version
+            - mkdir -p ~/.ssh/
+            - echo "${SSH_KNOWN_HOSTS}" > ~/.ssh/known_hosts
+            - echo "${SSH_PRIVATE_KEY}" | base64 -d > ~/.ssh/id_rsa
+            - chmod 600 ~/.ssh/id_rsa
+            - ssh ${SSH_USER}@${SSH_HOST} "sed -i \"s%signalbot/backend-socket-io:.*$%signalbot/backend-socket-io:$version%\" signalbot-system/docker-compose.yml"
+            - ssh ${SSH_USER}@${SSH_HOST} "cd ~/signalbot-system && docker-compose pull signalbot-backend-socket-io"
+            - ssh ${SSH_USER}@${SSH_HOST} "cd ~/signalbot-system && docker-compose up -d signalbot-backend-socket-io"
+    swagger:
+      - step:
+          name: Build Docker image - Swagger
+          script:
+            - npm install
+            - npx nx build swagger
+            - docker build -t signalbot-backend-swagger:latest --build-arg APP_PATH="dist/apps/swagger" --build-arg APP_PORTS="8001 8001" -f Dockerfile.bitbucket .
+            - docker tag signalbot-backend-swagger:latest $ARTIFACTORY_SERVER/signalbot/backend-swagger:latest
+            - echo $ARTIFACTORY_SECRET | docker login $ARTIFACTORY_SERVER --username $ARTIFACTORY_USER --password-stdin
+            - docker push $ARTIFACTORY_SERVER/signalbot/backend-swagger:latest
+          services:
+            - docker

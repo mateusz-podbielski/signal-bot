@@ -1,0 +1,20 @@
+get:
+  security:
+    - xAuthToken: [ ]
+  tags:
+    - user
+  summary: Get user avatar
+  parameters:
+    - in: path
+      required: true
+      name: uid
+      description: User Mongo ID
+      schema:
+        type: string
+  responses:
+    200:
+      description: User avatar image
+    404:
+      description: User avatar not found
+    500:
+      description: UNexpected errors

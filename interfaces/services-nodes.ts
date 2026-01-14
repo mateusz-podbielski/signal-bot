@@ -1,0 +1,11 @@
+export enum ServicesNodes {
+  SOCKET_IO_NODE = 'SOCKET_IO_NODE',
+  API_NODE = 'API_NODE',
+  AUTH_APP_NODE = 'AUTH_APP_NODE'
+}
+
+export enum BrokerServiceName {
+  SOCKET_IO_SERVICE = 'SOCKET_IO_SERVICE',
+  API_SERVICE = 'API_SERVICE',
+  AUTH_APP_SERVICE = 'AUTH_APP_SERVICE'
+}

@@ -1,0 +1,28 @@
+type: object
+properties:
+  patient:
+    type: string
+    description: Patient Mongo ID
+  value:
+    oneOf:
+      - type: string
+      - type: number
+      - $ref: 'quantity.yaml'
+      - type: array
+        items:
+          $ref: 'quantity.yaml'
+      - $ref: 'feeding.yaml'
+      - $ref: 'blood-type-payload.yaml'
+    description: Value of observation
+  note:
+    type: string
+    description: The note for observation
+  method:
+    $ref: 'observation-method.yaml'
+  effective:
+    type: string
+    format: date-time
+    description: Datetime, when observation has been performed
+required:
+  - effective
+  - patient

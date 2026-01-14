@@ -1,0 +1,53 @@
+{
+  "resourceType": "ValueSet",
+  "id": "ObservationCategory",
+  "name": "Kategoria obserwacji (pomiaru)",
+  "status": "active",
+  "publisher": "SignalBot",
+  "version": 2,
+  "url": "/ValueSet/ObservationCategory",
+  "compose": {
+    "include": [
+      {
+        "concept": [
+          {
+            "code": "BodyWeight",
+            "display": "Waga ciała"
+          },
+          {
+            "code": "BodyHeight",
+            "display": "Wzrost"
+          },
+          {
+            "code": "HeartRate",
+            "display": "Puls"
+          },
+          {
+            "code": "BodyTemp",
+            "display": "Temperatura ciała"
+          },
+          {
+            "code": "BloodPressure",
+            "display": "Ciśnienie"
+          },
+          {
+            "code": "GlucoseLevel",
+            "display": "Glikemia"
+          },
+          {
+            "code": "Pain",
+            "display": "Ból"
+          },
+          {
+            "code": "Activity",
+            "display": "Aktywność"
+          },
+          {
+            "code": "Mood",
+            "display": "Nastrój"
+          }
+        ]
+      }
+    ]
+  }
+}

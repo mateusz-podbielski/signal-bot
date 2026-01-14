@@ -1,0 +1,9 @@
+type: object
+properties:
+  versionId:
+    type: number
+  lastUpdated:
+    type: number
+  source:
+    type: string
+description: Resourse metadata

@@ -1,0 +1,12 @@
+type: object
+properties:
+  code:
+    $ref: 'error-code-enum.yaml'
+  errors:
+    type: array
+    items:
+      properties:
+        $ref: 'validation-item.yaml'
+required:
+  - code
+description: Incorrect data has been provided

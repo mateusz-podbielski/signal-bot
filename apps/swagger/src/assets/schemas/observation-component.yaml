@@ -1,0 +1,12 @@
+type: object
+properties:
+  code:
+    $ref: 'codeable-concept.yaml'
+  valueQuantity:
+    $ref: 'quantity.yaml'
+  valueString:
+    type: string
+  valueInteger:
+    type: number
+#  interpretation?: CodeableConcept;
+#  referenceRange?: (ReferenceRange | DBReferenceRange)[];
